@@ -4,5 +4,6 @@
   "/_document": "pages/_document.js",
   "/AdminPanal": "pages/AdminPanal.js",
   "/ServicesPage": "pages/ServicesPage.js",
-  "/ContactUsPage": "pages/ContactUsPage.js"
+  "/ContactUsPage": "pages/ContactUsPage.js",
+  "/loginpage": "pages/loginpage.js"
 }
