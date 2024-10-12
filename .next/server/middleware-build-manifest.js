@@ -12,10 +12,15 @@ self.__BUILD_MANIFEST = {
     "static/chunks/main-app.js"
   ],
   "pages": {
-    "/AdminPanal": [
+    "/ContactUsPage": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/AdminPanal.js"
+      "static/chunks/pages/ContactUsPage.js"
+    ],
+    "/ServicesPage": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/ServicesPage.js"
     ],
     "/_app": [
       "static/chunks/webpack.js",
@@ -26,11 +31,6 @@ self.__BUILD_MANIFEST = {
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
-    ],
-    "/loginpage": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/loginpage.js"
     ]
   },
   "ampFirstPages": []
