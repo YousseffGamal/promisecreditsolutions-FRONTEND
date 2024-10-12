@@ -1,4 +1,4 @@
-// File: D:\projects work\promisecreditsolutions-FRONTEND\src\app\page.js
+// File: C:\Users\HP\Desktop\pr\promisecreditsolutions-FRONTEND\src\app\page.js
 import * as entry from '../../../src/app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
