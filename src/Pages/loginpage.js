@@ -4,7 +4,7 @@ import axios from "axios";
 import { useRouter } from "next/router"; // Import useRouter
 import "../app/globals.css";
 
-const loginpage = () => {
+const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -45,14 +45,20 @@ const loginpage = () => {
         // Save token and user data to local storage
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", JSON.stringify(response.data.user)); // Store user data
-  
+
         // Log user info including ID to the console
         console.log("User Info:", response.data.user); // Log entire user object
         console.log("User ID:", response.data.user.id); // Log user ID
-  
+
         setSuccessMessage("Login successful!");
         setErrorMessage("");
-        router.push("/"); // Navigate to home page only if the response is valid
+
+        // Check if the user is an admin
+        if (response.data.user.role === "admin") {
+          router.push("/AdminPanal"); // Redirect to admin page if the user is an admin
+        } else {
+          router.push("/"); // Navigate to home page otherwise
+        }
       } else {
         throw new Error("Invalid response from the server");
       }
@@ -67,8 +73,6 @@ const loginpage = () => {
     }
   };
   
-  
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-lg">
@@ -138,4 +142,4 @@ const loginpage = () => {
   );
 };
 
-export default loginpage;
+export default LoginPage;

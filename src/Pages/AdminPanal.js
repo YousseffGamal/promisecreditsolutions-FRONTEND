@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import {
   Table,
   TableBody,
@@ -13,43 +14,32 @@ import {
   Menu,
   MenuItem,
   TablePagination,
-  Select,
-  MenuItem as MuiMenuItem,
-  FormControl,
-  InputLabel,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
+  Switch,
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Navbar from '../components/Navbar';
-import '../app/globals.css';
+import Layout from '../components/Layout';
+import "../app/globals.css";
+import "../app/test.css";
 
-const AdminPanal = () => {
-  const [statusFilter, setStatusFilter] = useState('All');
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [currentUserId, setCurrentUserId] = useState(null);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [invoiceDetails, setInvoiceDetails] = useState({ amount: '', description: '' });
+const AdminPanel = () => {
+  const [activeTab, setActiveTab] = useState(0);
+  const [RoleFilter, setRoleFilter] = useState('All');
+  const [userCount, setUserCount] = useState(0); // Declare userCount before using it
+  const [clientsData, setClientsData] = useState([]);
+  const [leadsData, setLeadsData] = useState([]);
+  const [invoiceCount, setInvoiceCount] = useState(0); // Declare invoiceCount state
 
+  // Move the stats array declaration below userCount initialization
   const stats = [
-    { title: 'No. Of Users', value: 150, bgColor: '#0177FB', textColor: '#fff' },
-    { title: 'No. Of Invoice', value: 80, bgColor: '#FFFFFF', textColor: '#000000' },
+    { title: 'No. Of Users', value: userCount, bgColor: '#0177FB', textColor: '#fff' },
+    { title: 'No. Of Invoice', value: invoiceCount, bgColor: '#FFFFFF', textColor: '#000000' }, // Use invoiceCount
     { title: 'No. Of Sold Leads', value: 25, bgColor: '#FFFFFF', textColor: '#000000' },
-  ];
-
-  const leadsData = [
-    { id: 1, sellerName: 'John Doe', email: 'john@example.com', dateAdded: '2024-01-15', state: 'Active', closingTime: '2024-12-01', status: 'Pending' },
-    { id: 2, sellerName: 'Alice Johnson', email: 'alice@example.com', dateAdded: '2024-02-10', state: 'Inactive', closingTime: '2024-11-20', status: 'Paid' },
-    { id: 3, sellerName: 'Mark Smith', email: 'mark@example.com', dateAdded: '2024-03-12', state: 'Active', closingTime: '2024-12-01', status: 'Cancelled' },
-    // ... (other lead data)
-    { id: 17, sellerName: 'Sophia Young', email: 'sophia@example.com', dateAdded: '2024-12-01', state: 'Active', closingTime: '2025-01-20', status: 'Pending' },
   ];
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [currentUserId, setCurrentUserId] = useState(null);
 
   const handleClick = (event, id) => {
     setAnchorEl(event.currentTarget);
@@ -60,37 +50,19 @@ const AdminPanal = () => {
     setAnchorEl(null);
   };
 
-  const handleDialogOpen = () => {
-    setOpenDialog(true);
+  const handleDelete = () => {
+    console.log(`Deleted user with ID: ${currentUserId}`);
     handleClose();
   };
 
-  const handleDialogClose = () => {
-    setOpenDialog(false);
-    setInvoiceDetails({ amount: '', description: '' });
-  };
-
-  const handleSendInvoice = () => {
-    console.log(`Invoice sent to user ID: ${currentUserId}`, invoiceDetails);
-    handleDialogClose();
-  };
-
-  const handleInvoiceChange = (e) => {
-    const { name, value } = e.target;
-    setInvoiceDetails((prevDetails) => ({
-      ...prevDetails,
-      [name]: value,
-    }));
-  };
-
-  const getStatusStyles = (status) => {
-    switch (status) {
-      case 'Pending':
-        return { color: '#D0A704', backgroundColor: '#fffae6', borderRadius: '25.74px' };
-      case 'Paid':
-        return { color: '#0466D4', backgroundColor: '#f0f7ff', borderRadius: '25.74px' };
-      case 'Cancelled':
-        return { color: '#CB0A1D', backgroundColor: '#ffebed', borderRadius: '25.74px' };
+  const getPaymentStatusStyles = (paymentStatus) => {
+    switch (paymentStatus) {
+      case 'pending':
+        return { color: '#0466D4', backgroundColor: '#f0f7ff', borderRadius: '25.74px', padding: '4px 8px' };
+      case 'paid':
+        return { color: '#CB0A1D', backgroundColor: '#ffebed', borderRadius: '25.74px', padding: '4px 8px' };
+      case 'cancelled':
+        return { color: '#D0A704', backgroundColor: '#fffae6', borderRadius: '25.74px', padding: '4px 8px' };
       default:
         return {};
     }
@@ -105,26 +77,79 @@ const AdminPanal = () => {
     setPage(0);
   };
 
-  const handleStatusChange = (event) => {
-    setStatusFilter(event.target.value);
+  const handleSwitchChange = (event) => {
+    setActiveTab(event.target.checked ? 1 : 0);
+    setPage(0);
   };
 
-  const handleMenuItemClick = (action) => {
-    handleClose();
-    if (action === 'sendInvoice') {
-      handleDialogOpen();
-    } else if (action === 'deleteLead') {
-      console.log(`Lead with ID: ${currentUserId} deleted.`);
-      // Add delete logic here (e.g., make an API call to delete the lead)
+  const fetchClientsData = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.get('http://localhost:5000/api/users', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setClientsData(response.data);
+      setUserCount(response.data.length); // Update userCount with the fetched data
+      console.log('Fetched clients data:', response.data);
+    } catch (error) {
+      console.error('Error fetching clients data:', error);
     }
   };
 
+  useEffect(() => {
+    fetchClientsData();
+  }, []);
+
+  const fetchInvoiceData = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.get('http://localhost:5000/api/invoices', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (Array.isArray(response.data.invoices)) {
+        setLeadsData(response.data.invoices);
+        console.log('Fetched Invoice data:', response.data.invoices);
+      } else {
+        console.error('Unexpected data format for invoices:', response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching invoice data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchInvoiceData();
+  }, []);
+  const fetchInvoiceCount = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.get('http://localhost:5000/api/invoices/count', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
+      // Assuming your API returns the count in a specific format
+      setInvoiceCount(response.data.count); // Adjust according to your API response format
+    } catch (error) {
+      console.error('Error fetching invoice count:', error);
+    }
+  };
+  
+  useEffect(() => {
+    fetchInvoiceCount(); // Fetch invoice count when the component mounts
+  }, []);
+  
   return (
-    <>
-      <Navbar />
-      <Box sx={{ p: 3, backgroundColor: '#F1F1F1', color: '#e0e0e0' }}>
+    <Layout>
+      <Box sx={{ p: 3, backgroundColor: '#F1F1F1', color: '#e0e0e0', marginTop: '65px' }}>
         {/* Statistics Boxes */}
-        <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
+        <Box sx={{ display: 'flex', gap: 2, mb: 4, flexDirection: { xs: 'column', sm: 'row' } }}>
           {stats.map((stat, index) => (
             <Box
               key={index}
@@ -132,15 +157,23 @@ const AdminPanal = () => {
                 backgroundColor: stat.bgColor,
                 padding: '16px',
                 borderRadius: '30px',
-                width: '33%',
+                width: { xs: '100%', sm: '465px' },
+                height: '195px',
                 textAlign: 'center',
-                height: '150px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
               }}
             >
-              <Typography variant="h2" sx={{ color: stat.textColor, fontWeight: 'bold', fontSize: { xs: '2rem', sm: '3rem' } }}>
+              <Typography
+                className='CardNumber'
+                variant="h1"
+                sx={{
+                  color: stat.textColor,
+                  fontWeight: 'bold',
+                  fontSize: { xs: '2rem', sm: '3rem', md: '4rem', lg: '78px' },
+                }}
+              >
                 {stat.value}
               </Typography>
               <Box
@@ -153,145 +186,105 @@ const AdminPanal = () => {
                   mx: 'auto',
                 }}
               />
-              <Typography variant="h6" sx={{ color: stat.textColor }}>
+              <Typography className='TitleCard' variant="h6" sx={{ color: stat.textColor }}>
                 {stat.title}
               </Typography>
             </Box>
           ))}
         </Box>
 
-        {/* Labels and Status Dropdown */}
+        {/* Labels, Switch, and Role Dropdown */}
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start', mb: 2 }}>
-          <Typography variant="h6" sx={{ color: '#0177FB', mr: 2 }}>
-            Leads
+          <Typography variant="h6" sx={{ color: activeTab === 0 ? '#0177FB' : '#000', mr: 2 }}>
+            Invoices
           </Typography>
-          <FormControl variant="outlined" sx={{ ml: 2, minWidth: 200 }}>
-            <InputLabel id="status-select-label">Status</InputLabel>
-            <Select
-              labelId="status-select-label"
-              value={statusFilter}
-              onChange={handleStatusChange}
-              label="Status"
-              sx={{
-                bgcolor: '#FFFFFF',
-                borderRadius: '16.65px',
-                '& .MuiSelect-select': {
-                  padding: '10px',
-                },
-                '& .MuiOutlinedInput-notchedOutline': {
-                  borderColor: '#757575',
-                },
-                '&:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: '#757575',
-                },
-              }}
-            >
-              <MuiMenuItem value="All">All</MuiMenuItem>
-              <MuiMenuItem value="Pending">Pending</MuiMenuItem>
-              <MuiMenuItem value="Paid">Paid</MuiMenuItem>
-              <MuiMenuItem value="Cancelled">Cancelled</MuiMenuItem>
-            </Select>
-          </FormControl>
+          <Switch
+            checked={activeTab === 1}
+            onChange={handleSwitchChange}
+            inputProps={{ 'aria-label': 'Switch between Leads and Clients' }}
+          />
+          <Typography variant="h6" sx={{ color: activeTab === 1 ? '#0177FB' : '#000', ml: 2 }}>
+            Users
+          </Typography>
         </Box>
 
-        {/* Leads Table */}
-        <TableContainer component={Paper} sx={{ backgroundColor: '#FFFFFF', color: '#ffffff', borderRadius: '30px', mt: 2 }}>
+        {/* Table based on active tab */}
+        <TableContainer component={Paper} sx={{ backgroundColor: '#FFFFFF', color: '#ffffff', borderRadius: '30px', mt: 2, overflowX: 'auto' }}>
           <Table sx={{ minWidth: 650 }} aria-label="user table">
             <TableHead>
               <TableRow>
-                <TableCell sx={{ color: '#667085' }}>Name</TableCell>
-                <TableCell sx={{ color: '#667085' }}>Email</TableCell>
-                <TableCell sx={{ color: '#667085' }}>Status</TableCell>
-                <TableCell sx={{ color: '#667085' }}>Action</TableCell>
+                {activeTab === 0 ? (
+                  <>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Invoice</TableCell>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Date</TableCell>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Price</TableCell>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Payment Status</TableCell>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Due Date</TableCell>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Action</TableCell>
+                  </>
+                ) : (
+                  <>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Client Name</TableCell>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Email</TableCell>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Role</TableCell>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Action</TableCell>
+                  </>
+                )}
               </TableRow>
             </TableHead>
             <TableBody>
-              {leadsData
-                .filter((lead) => statusFilter === 'All' || lead.status === statusFilter) // Filter leads based on status
+              {(activeTab === 0 ? leadsData : clientsData)
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((user) => {
-                  const statusStyles = getStatusStyles(user.status);
-                  return (
-                    <TableRow key={user.id}>
-                      <TableCell sx={{ color: '#101828' }}>{user.sellerName}</TableCell>
-                      <TableCell sx={{ color: '#101828' }}>{user.email}</TableCell>
-                      <TableCell sx={{ color: '#101828' }}>
-                        <Box sx={{ ...statusStyles, padding: '5px 10px', display: 'inline-block' }}>{user.status}</Box>
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          variant="text"
-                          onClick={(event) => handleClick(event, user.id)}
-                          sx={{
-                            color: '#5D68A0',
-                            '&:hover': {
-                              backgroundColor: '#E3F2FD',
-                            },
-                          }}
-                        >
-                          <MoreVertIcon />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
+                .map((row, index) => (
+                  <TableRow key={index}>
+                    {activeTab === 0 ? (
+                      <>
+                        <TableCell>{row.name}</TableCell>
+                        <TableCell>{new Date(row.date).toLocaleDateString()}</TableCell>
+                        <TableCell>{row.price}</TableCell>
+                        <TableCell>
+                          <span style={getPaymentStatusStyles(row.paymentStatus)}>
+                            {row.paymentStatus}
+                          </span>
+                        </TableCell>
+                        <TableCell>{row.dueDate}</TableCell>
+                        <TableCell>
+                          <MoreVertIcon onClick={(event) => handleClick(event, row._id)} />
+                          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+                            <MenuItem onClick={handleDelete}>Delete</MenuItem>
+                          </Menu>
+                        </TableCell>
+                      </>
+                    ) : (
+                      <>
+                        <TableCell>{row.clientName}</TableCell>
+                        <TableCell>{row.email}</TableCell>
+                        <TableCell>{row.role}</TableCell>
+                        <TableCell>
+                          <MoreVertIcon onClick={(event) => handleClick(event, row._id)} />
+                          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+                            <MenuItem onClick={handleDelete}>Delete</MenuItem>
+                          </Menu>
+                        </TableCell>
+                      </>
+                    )}
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={leadsData.filter((lead) => statusFilter === 'All' || lead.status === statusFilter).length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
         </TableContainer>
-
-        {/* Action Menu */}
-        <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-          <MenuItem onClick={() => handleMenuItemClick('sendInvoice')}>Send Invoice</MenuItem>
-          <MenuItem onClick={() => handleMenuItemClick('deleteLead')}>credit score</MenuItem>
-        </Menu>
-
-        {/* Invoice Dialog */}
-        <Dialog open={openDialog} onClose={handleDialogClose}>
-          <DialogTitle>Send Invoice</DialogTitle>
-          <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              name="amount"
-              label="Amount"
-              type="number"
-              fullWidth
-              variant="outlined"
-              value={invoiceDetails.amount}
-              onChange={handleInvoiceChange}
-            />
-            <TextField
-              margin="dense"
-              name="description"
-              label="Description"
-              type="text"
-              fullWidth
-              variant="outlined"
-              value={invoiceDetails.description}
-              onChange={handleInvoiceChange}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleDialogClose} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleSendInvoice} color="primary">
-              Send
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={activeTab === 0 ? leadsData.length : clientsData.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </Box>
-    </>
+    </Layout>
   );
 };
 
-export default AdminPanal;
+export default AdminPanel;
