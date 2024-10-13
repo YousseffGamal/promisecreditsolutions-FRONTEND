@@ -257,7 +257,7 @@ const AdminPanel = () => {
                       </>
                     ) : (
                       <>
-                        <TableCell>{row.clientName}</TableCell>
+                        <TableCell>{row.fullName}</TableCell>
                         <TableCell>{row.email}</TableCell>
                         <TableCell>{row.role}</TableCell>
                         <TableCell>

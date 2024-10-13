@@ -124,14 +124,14 @@ const Navbar = () => {
           </Link>
 
           {/* Admin Panel Link - Displayed only if the user is an admin */}
-          {user?.role === "admin" && (
+          {/* {user?.role === "admin" && (
             <Link href="/AdminPanal">
               <span className="relative text-[#3B4052] text-[20px] font-[LufgaSemiBold] py-[20px] mr-[30px] group">
                 Admin Panel
                 <span className="absolute bottom-[-5px] left-0 w-0 h-[2px] bg-[#813a96] transition-[width] duration-300 ease-in-out group-hover:w-full"></span>
               </span>
             </Link>
-          )}
+          )} */}
         </div>
 
         {/* Right-aligned buttons */}
