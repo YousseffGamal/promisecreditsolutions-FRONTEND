@@ -142,3 +142,7 @@ font-family: "LufgaLight" !important;
   font-family: "LufgaMedium" !important;
 
 }
+.css-4nmryk-MuiBackdrop-root-MuiModal-backdrop {
+  background-color: rgba(255, 255, 255, 0.4) !important; /* Adjust opacity as needed */
+  backdrop-filter: blur(10px); /* Apply blur effect */
+}

@@ -124,7 +124,7 @@ const SignUpPage = () => {
         <div className="flex justify-center">
           <p className="text-sm text-gray-600">
             Already have an account?{" "}
-            <a href="/LoginPage" className="text-purple-600 hover:underline">Log In</a>
+            <a href="/loginpage" className="text-purple-600 hover:underline">Log In</a>
           </p>
         </div>
 

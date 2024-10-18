@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/router'; // Import useRouter
+import SendInvoiceModal from '../components/SendInvoiceModal'; // Adjust the import path accordingly
+import CreditScoreModal from '../components/CreditScoreModal'; // Adjust the path accordingly
+import HalfCircleGraph from "../components/HalfCircleGraph"
 import {
   Table,
   TableBody,
@@ -28,7 +32,12 @@ const AdminPanel = () => {
   const [clientsData, setClientsData] = useState([]);
   const [leadsData, setLeadsData] = useState([]);
   const [invoiceCount, setInvoiceCount] = useState(0); // Declare invoiceCount state
-
+  const router = useRouter(); // Define router here
+  const [modalOpen, setModalOpen] = useState(false);
+  const [showGraph, setShowGraph] = useState(false); // State to control graph visibility
+  // Existing state
+  const [creditScore, setCreditScore] = useState(null);
+  const [showCreditScoreModal, setShowCreditScoreModal] = useState(false); // State for the credit score modal
   // Move the stats array declaration below userCount initialization
   const stats = [
     { title: 'No. Of Users', value: userCount, bgColor: '#0177FB', textColor: '#fff' },
@@ -144,7 +153,24 @@ const AdminPanel = () => {
   useEffect(() => {
     fetchInvoiceCount(); // Fetch invoice count when the component mounts
   }, []);
-  
+
+ 
+  const handleSendInvoice = () => {
+    setModalOpen(true); // Open the modal
+  };
+  const handleCloseModal = () => {
+    setModalOpen(false); // Close the modal
+  };
+   // Function to open the modal
+   const handleOpenCreditScoreModal = () => {
+    setShowCreditScoreModal(true);
+  };
+
+  // Function to handle credit score submission
+  const handleCreditScoreSubmit = (score) => {
+    setCreditScore(score);
+    // You can also send the score to your backend if necessary
+  };
   return (
     <Layout>
       <Box sx={{ p: 3, backgroundColor: '#F1F1F1', color: '#e0e0e0', marginTop: '65px' }}>
@@ -227,6 +253,9 @@ const AdminPanel = () => {
                     <TableCell className='TableHeader' sx={{ color: '#667085' }}>Client Name</TableCell>
                     <TableCell className='TableHeader' sx={{ color: '#667085' }}>Email</TableCell>
                     <TableCell className='TableHeader' sx={{ color: '#667085' }}>Role</TableCell>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Send Invoice</TableCell>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Credit Score</TableCell>
+
                     <TableCell className='TableHeader' sx={{ color: '#667085' }}>Action</TableCell>
                   </>
                 )}
@@ -253,6 +282,7 @@ const AdminPanel = () => {
                           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
                             <MenuItem onClick={handleDelete}>Delete</MenuItem>
                           </Menu>
+                       
                         </TableCell>
                       </>
                     ) : (
@@ -260,6 +290,52 @@ const AdminPanel = () => {
                         <TableCell>{row.fullName}</TableCell>
                         <TableCell>{row.email}</TableCell>
                         <TableCell>{row.role}</TableCell>
+                        <TableCell>
+                        <Button
+        onClick={handleSendInvoice}
+        className="editButton"
+        sx={{
+          color: 'white',
+          backgroundColor: '#0177FB',
+          padding: '8px 16px',
+          borderRadius: '25px',
+          '&:hover': { backgroundColor: '#0166D4' },
+        }}
+      >
+        Send
+      </Button>
+      
+      <SendInvoiceModal 
+        open={modalOpen} 
+        onClose={handleCloseModal} 
+        userId={row._id} // Pass the userId to the modal
+      />
+</TableCell>
+<TableCell>
+                        <Button
+                        
+        className="editButton"
+        sx={{
+          color: 'white',
+          backgroundColor: '#0177FB',
+          padding: '8px 16px',
+          borderRadius: '25px',
+          '&:hover': { backgroundColor: '#0166D4' },
+        }}
+        onClick={handleOpenCreditScoreModal}
+      >
+                Send Credit Score
+      </Button>
+      <CreditScoreModal 
+        open={showCreditScoreModal} 
+        onClose={() => setShowCreditScoreModal(false)} 
+        onSubmit={handleCreditScoreSubmit} 
+      />
+      {creditScore && <HalfCircleGraph score={creditScore} />}
+
+  
+</TableCell>
+
                         <TableCell>
                           <MoreVertIcon onClick={(event) => handleClick(event, row._id)} />
                           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
