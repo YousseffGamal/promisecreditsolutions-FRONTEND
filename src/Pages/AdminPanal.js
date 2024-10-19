@@ -162,8 +162,9 @@ const AdminPanel = () => {
     setModalOpen(false); // Close the modal
   };
    // Function to open the modal
-   const handleOpenCreditScoreModal = () => {
-    setShowCreditScoreModal(true);
+   const handleOpenCreditScoreModal = (userId) => {
+    setCurrentUserId(userId); // Set the current user ID to be passed to the modal
+    setShowCreditScoreModal(true); // Open the credit score modal
   };
 
   // Function to handle credit score submission
@@ -312,25 +313,20 @@ const AdminPanel = () => {
       />
 </TableCell>
 <TableCell>
-                        <Button
-                        
-        className="editButton"
-        sx={{
-          color: 'white',
-          backgroundColor: '#0177FB',
-          padding: '8px 16px',
-          borderRadius: '25px',
-          '&:hover': { backgroundColor: '#0166D4' },
-        }}
-        onClick={handleOpenCreditScoreModal}
-      >
-                Send Credit Score
-      </Button>
-      <CreditScoreModal 
-        open={showCreditScoreModal} 
-        onClose={() => setShowCreditScoreModal(false)} 
-        onSubmit={handleCreditScoreSubmit} 
-      />
+<Button
+    onClick={() => handleOpenCreditScoreModal(row._id)} // Pass userId to open modal
+    variant="contained"
+    sx={{ backgroundColor: '#0177FB', color: '#fff' }}
+  >
+    Enter Credit Score
+  </Button>
+
+  <CreditScoreModal
+  open={showCreditScoreModal}
+  onClose={() => setShowCreditScoreModal(false)}
+  onSubmit={handleCreditScoreSubmit}
+  userId={currentUserId} // Pass userId to the CreditScoreModal
+/>
       {creditScore && <HalfCircleGraph score={creditScore} />}
 
   
