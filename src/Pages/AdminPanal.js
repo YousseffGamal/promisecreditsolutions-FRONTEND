@@ -3,7 +3,8 @@ import axios from 'axios';
 import { useRouter } from 'next/router'; // Import useRouter
 import SendInvoiceModal from '../components/SendInvoiceModal'; // Adjust the import path accordingly
 import CreditScoreModal from '../components/CreditScoreModal'; // Adjust the path accordingly
-import HalfCircleGraph from "../components/HalfCircleGraph"
+import CreditScoreGraph from '../components/CreditScoreGraph'; // Import your graph component
+
 import {
   Table,
   TableBody,
@@ -39,6 +40,8 @@ const AdminPanel = () => {
   const [creditScore, setCreditScore] = useState(null);
   const [showCreditScoreModal, setShowCreditScoreModal] = useState(false); // State for the credit score modal
   // Move the stats array declaration below userCount initialization
+  const [creditScores, setCreditScores] = useState({}); // Change to an object to hold scores per user
+
   const stats = [
     { title: 'No. Of Users', value: userCount, bgColor: '#0177FB', textColor: '#fff' },
     { title: 'No. Of Invoice', value: invoiceCount, bgColor: '#FFFFFF', textColor: '#000000' }, // Use invoiceCount
@@ -142,36 +145,36 @@ const AdminPanel = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      
+
       // Assuming your API returns the count in a specific format
       setInvoiceCount(response.data.count); // Adjust according to your API response format
     } catch (error) {
       console.error('Error fetching invoice count:', error);
     }
   };
-  
+
   useEffect(() => {
     fetchInvoiceCount(); // Fetch invoice count when the component mounts
   }, []);
 
- 
+
   const handleSendInvoice = () => {
     setModalOpen(true); // Open the modal
   };
   const handleCloseModal = () => {
     setModalOpen(false); // Close the modal
   };
-   // Function to open the modal
-   const handleOpenCreditScoreModal = (userId) => {
-    setCurrentUserId(userId); // Set the current user ID to be passed to the modal
-    setShowCreditScoreModal(true); // Open the credit score modal
+  // Function to open the modal
+  const handleOpenCreditScoreModal = (userId) => {
+    setCurrentUserId(userId);
+    setShowCreditScoreModal(true);
   };
 
-  // Function to handle credit score submission
   const handleCreditScoreSubmit = (score) => {
-    setCreditScore(score);
-    // You can also send the score to your backend if necessary
+    setCreditScores((prevScores) => ({ ...prevScores, [currentUserId]: score })); // Update score for the specific user
+    setShowCreditScoreModal(false);
   };
+
   return (
     <Layout>
       <Box sx={{ p: 3, backgroundColor: '#F1F1F1', color: '#e0e0e0', marginTop: '65px' }}>
@@ -254,8 +257,8 @@ const AdminPanel = () => {
                     <TableCell className='TableHeader' sx={{ color: '#667085' }}>Client Name</TableCell>
                     <TableCell className='TableHeader' sx={{ color: '#667085' }}>Email</TableCell>
                     <TableCell className='TableHeader' sx={{ color: '#667085' }}>Role</TableCell>
-                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Send Invoice</TableCell>
-                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Credit Score</TableCell>
+                    {/* <TableCell className='TableHeader' sx={{ color: '#667085' }}>Send Invoice</TableCell> */}
+                    {/* <TableCell className='TableHeader' sx={{ color: '#667085' }}>Credit Score</TableCell> */}
 
                     <TableCell className='TableHeader' sx={{ color: '#667085' }}>Action</TableCell>
                   </>
@@ -283,7 +286,7 @@ const AdminPanel = () => {
                           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
                             <MenuItem onClick={handleDelete}>Delete</MenuItem>
                           </Menu>
-                       
+
                         </TableCell>
                       </>
                     ) : (
@@ -291,7 +294,7 @@ const AdminPanel = () => {
                         <TableCell>{row.fullName}</TableCell>
                         <TableCell>{row.email}</TableCell>
                         <TableCell>{row.role}</TableCell>
-                        <TableCell>
+                        {/* <TableCell>
                         <Button
         onClick={handleSendInvoice}
         className="editButton"
@@ -305,37 +308,44 @@ const AdminPanel = () => {
       >
         Send
       </Button>
-      
-      <SendInvoiceModal 
-        open={modalOpen} 
-        onClose={handleCloseModal} 
-        userId={row._id} // Pass the userId to the modal
-      />
-</TableCell>
-<TableCell>
-<Button
-    onClick={() => handleOpenCreditScoreModal(row._id)} // Pass userId to open modal
-    variant="contained"
-    sx={{ backgroundColor: '#0177FB', color: '#fff' }}
-  >
-    Enter Credit Score
-  </Button>
+    
+</TableCell> */}
+                        {/* <TableCell>
 
-  <CreditScoreModal
-  open={showCreditScoreModal}
-  onClose={() => setShowCreditScoreModal(false)}
-  onSubmit={handleCreditScoreSubmit}
-  userId={currentUserId} // Pass userId to the CreditScoreModal
-/>
-      {creditScore && <HalfCircleGraph score={creditScore} />}
+                          <SendInvoiceModal
+                            open={modalOpen}
+                            onClose={handleCloseModal}
+                            userId={row._id} // Pass the userId to the modal
+                          />
+                          <Button
+                            onClick={() => handleOpenCreditScoreModal(row._id)} // Pass userId to open modal
+                            variant="contained"
+                            sx={{ backgroundColor: '#0177FB', color: '#fff' }}
+                          >
+                            Enter Credit Score
+                          </Button>
+                       
 
-  
-</TableCell>
+
+                        </TableCell> */}
+                        <CreditScoreModal
+                            open={showCreditScoreModal}
+                            onClose={() => setShowCreditScoreModal(false)}
+                            onSubmit={handleCreditScoreSubmit}
+                            userId={currentUserId}
+                          />
+                          {creditScores[row._id] && ( // Check if score exists for the user
+                            <CreditScoreGraph score={creditScores[row._id]} /> // Pass the score to your graph
+                          )}
 
                         <TableCell>
                           <MoreVertIcon onClick={(event) => handleClick(event, row._id)} />
                           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
                             <MenuItem onClick={handleDelete}>Delete</MenuItem>
+                            <MenuItem onClick={handleSendInvoice} >Send Invoice	</MenuItem>
+                            <MenuItem onClick={() => handleOpenCreditScoreModal(row._id)} // Pass userId to open modal
+                            > Enter Credit Score</MenuItem>
+
                           </Menu>
                         </TableCell>
                       </>
