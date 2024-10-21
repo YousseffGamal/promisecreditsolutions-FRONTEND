@@ -171,8 +171,13 @@ const Navbar = () => {
                       <div style={{ display: "block" }}>
                         <p className="font-semibold">{user.fullName}</p> {/* User name */}
                         <p className="text-sm text-gray-500">{user.email}</p> {/* User email */}
+                  
                       </div>
                     </div>
+                    <div className="border-t border-gray-300"></div>
+                    <Link href="/Profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" >
+                      Profile
+                    </Link>
                     <div className="border-t border-gray-300"></div>
                     <Link href="/loginpage" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={handleLogout}>
                       Logout

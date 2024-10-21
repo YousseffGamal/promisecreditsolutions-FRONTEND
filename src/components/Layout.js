@@ -213,9 +213,9 @@ const Layout = ({ children }) => {
                     charlesgray@gmail.com
                   </Typography>
                 </MenuItem>
-                <MenuItem onClick={() => router.push('/profile')}>
+                {/* <MenuItem onClick={() => router.push('/profile')}>
                   Profile
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
             </Box>
