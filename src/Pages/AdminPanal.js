@@ -347,6 +347,13 @@ const AdminPanel = () => {
                             > Enter Credit Score</MenuItem>
 
                           </Menu>
+                          {modalOpen && (
+          <SendInvoiceModal
+            open={modalOpen}
+            onClose={handleCloseModal}
+            userId={currentUserId}
+          />
+        )}
                         </TableCell>
                       </>
                     )}
