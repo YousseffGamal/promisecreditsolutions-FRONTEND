@@ -97,11 +97,11 @@ const Layout = ({ children }) => {
           <ListItemText className='NavText' primary="Leads Dashboard" sx={{ color: '#656565' }} />
         </ListItem>
 
-        <ListItem button onClick={() => router.push('/users')}>
+        <ListItem button onClick={() => router.push('/ReviewsPage')}>
           <ListItemIcon>
             <People style={{ color: '#656565' }} />
           </ListItemIcon>
-          <ListItemText className='NavText' primary="Blogs & Articles" sx={{ color: '#656565' }} />
+          <ListItemText className='NavText' primary="Reviews" sx={{ color: '#656565' }} />
         </ListItem>
       </List>
     </div>
