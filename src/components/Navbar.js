@@ -175,7 +175,7 @@ const Navbar = () => {
                       </div>
                     </div>
                     <div className="border-t border-gray-300"></div>
-                    <Link href="/Profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" >
+                    <Link href={`/profile/${user?._id || ""}`} passHref className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" >
                       Profile
                     </Link>
                     <div className="border-t border-gray-300"></div>
