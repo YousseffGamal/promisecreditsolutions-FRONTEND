@@ -104,7 +104,6 @@ const AdminPanel = () => {
       });
       setClientsData(response.data);
       setUserCount(response.data.length); // Update userCount with the fetched data
-      console.log('Fetched clients data:', response.data);
     } catch (error) {
       console.error('Error fetching clients data:', error);
     }
@@ -125,7 +124,6 @@ const AdminPanel = () => {
 
       if (Array.isArray(response.data.invoices)) {
         setLeadsData(response.data.invoices);
-        console.log('Fetched Invoice data:', response.data.invoices);
       } else {
         console.error('Unexpected data format for invoices:', response.data);
       }
