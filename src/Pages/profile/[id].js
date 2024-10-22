@@ -32,28 +32,7 @@ const Profile = () => {
         .catch((error) => console.error("Error fetching user data:", error));
     }
   }, [userId]);
-  // Fetch user data from localStorage or API
-//   useEffect(() => {
-//     // Try to get user info from localStorage
-//     const storedUser = JSON.parse(localStorage.getItem('user'));
 
-//     if (storedUser) {
-//       setUser(storedUser);
-//       setSelectedImage(`http://localhost:5000/${storedUser.profileImage}`);
-//     } else {
-//       // If not in localStorage, fetch from backend
-//       axios.get("http://localhost:5000/api/users")
-//         .then((response) => {
-//           const userData = response.data;
-//           setUser(userData);
-//           setSelectedImage(`http://localhost:5000/${userData.profileImage}`);
-
-//           // Save the fetched user data to localStorage
-//           localStorage.setItem('user', JSON.stringify(userData));
-//         })
-//         .catch((error) => console.error("Error fetching user data:", error));
-//     }
-//   }, []);
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -72,7 +51,7 @@ const Profile = () => {
   return (
     <>
       <Navbar />
-      <CreditScoreGraph score={800} theme="light" />
+      
 
 
       <Box
@@ -86,6 +65,7 @@ const Profile = () => {
           position: "relative",
         }}
       >
+        <CreditScoreGraph score={600} />
         {/* Profile Image */}
         <Box sx={{ position: "relative" }}>
           <Avatar
