@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Logo from "../app/assets/imgs/pcs-1-logo_-n.png";
 import Profile from "../app/assets/imgs/profile.png";
-import Image from "next/image"; // Import Next.js Image component
+import Image from "next/image";
 
 import {
   AppBar,
@@ -28,14 +28,23 @@ import {
   Notifications,
   Logout
 } from '@mui/icons-material';
-import { useRouter } from 'next/router'; // <-- useRouter instead of useNavigate
+import { useRouter } from 'next/router';
 
 const drawerWidth = 280;
 
 const Layout = ({ children }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const router = useRouter(); // <-- useRouter hook
+  const [user, setUser] = useState({ fullName: '', email: '' });
+  const router = useRouter();
+
+  useEffect(() => {
+    // Fetch user data from local storage
+    const userData = JSON.parse(localStorage.getItem('user')); // Assuming user data is stored in local storage
+    if (userData) {
+      setUser({ fullName: userData.fullName, email: userData.email });
+    }
+  }, []);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -50,7 +59,9 @@ const Layout = ({ children }) => {
   };
 
   const handleLogout = () => {
-    router.push('/'); // <-- Use router.push to navigate in Next.js
+    localStorage.removeItem('token'); // Remove the token from local storage
+    localStorage.removeItem('user'); // Optionally remove user data as well
+    router.push('/loginpage'); // Redirect to the login page
   };
 
   const drawer = (
@@ -72,7 +83,7 @@ const Layout = ({ children }) => {
           variant="h4"
           sx={{ color: '#000000', marginTop: '85px', textAlign: 'left', padding: '8px 16px' }}
         >
-          Welcome <br /> Back, Charles!
+          Welcome <br /> Back, {user.fullName || 'User!'}
         </Typography>
         <Typography
           className="About"
@@ -89,8 +100,7 @@ const Layout = ({ children }) => {
         >
           Navigation
         </Typography>
-        {/* Replace <Link> with <a> and router.push in Next.js */}
-        <ListItem button onClick={() => router.push('/dashboard')}>
+        <ListItem button onClick={() => router.push('/AdminPanal')}>
           <ListItemIcon>
             <Dashboard style={{ color: '#656565' }} />
           </ListItemIcon>
@@ -141,23 +151,6 @@ const Layout = ({ children }) => {
             Leads Dashboard
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-           
-            {/* <Button
-              variant="contained"
-              sx={{
-                backgroundColor: '#0177FB',
-                borderRadius: '27.66px',
-                color: '#ffffff',
-                padding: '8px 16px',
-                width: { xs: 'auto', sm: '200px' },
-                height: { xs: '45px', sm: '56px' },
-                fontSize: { xs: '0.875rem', sm: '1.25rem' },
-              }}
-              onClick={() => router.push('/addlead')}
-            >
-              New Lead
-            </Button> */}
-                  
             <Box
               sx={{
                 backgroundColor: '#F1F1F1',
@@ -205,17 +198,14 @@ const Layout = ({ children }) => {
               >
                 <MenuItem onClick={handleClose}>
                   <Typography className="UserName" variant="body1" sx={{ color: '#656565', fontSize: { xs: '0.875rem', sm: '1rem' } }}>
-                    Charles Gray
+                    {user.fullName || 'Loading...'}
                   </Typography>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
                   <Typography className="UserEmail" variant="body2" sx={{ color: '#A3A3A3', fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
-                    charlesgray@gmail.com
+                    {user.email || 'Loading...'}
                   </Typography>
                 </MenuItem>
-                {/* <MenuItem onClick={() => router.push('/profile')}>
-                  Profile
-                </MenuItem> */}
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
             </Box>
