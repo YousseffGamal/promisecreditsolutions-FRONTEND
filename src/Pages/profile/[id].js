@@ -5,6 +5,8 @@ import Navbar from "../../components/Navbar";
 import axios from "axios"; // Import axios to make API calls
 import { useRouter } from "next/router"; // Import useRouter for dynamic routing
 import "../../app/globals.css";
+import CreditScoreGraph from '../../components/CreditScoreGraph';
+
 
 const Profile = () => {
     const router = useRouter(); // Initialize useRouter
@@ -70,6 +72,8 @@ const Profile = () => {
   return (
     <>
       <Navbar />
+      <CreditScoreGraph score={800} theme="light" />
+
 
       <Box
         sx={{
