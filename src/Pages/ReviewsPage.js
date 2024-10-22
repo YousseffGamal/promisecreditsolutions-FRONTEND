@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'; // Import Axios
+import axios from 'axios';
 import {
   Box,
   Button,
@@ -21,8 +21,7 @@ import Layout from '../components/Layout';
 const ReviewsPage = () => {
   const [reviews, setReviews] = useState([]);
   const [open, setOpen] = useState(false);
-  const [newReview, setNewReview] = useState({ name: '', date: '', message: '', imageUrl: null });
-  const [file, setFile] = useState(null); // State for the uploaded file
+  const [newReview, setNewReview] = useState({ name: '', date: '', message: '' });
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -40,29 +39,31 @@ const ReviewsPage = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
-    setNewReview({ name: '', date: '', message: '', imageUrl: null });
-    setFile(null);
+    setNewReview({ name: '', date: '', message: '' });
   };
 
   const handleAddReview = async () => {
-    const formData = new FormData();
-    formData.append('name', newReview.name);
-    formData.append('date', newReview.date);
-    formData.append('message', newReview.message);
-    if (file) {
-      formData.append('image', file); // Append the file to the FormData
-    }
+    const reviewData = {
+      name: newReview.name,
+      date: newReview.date,
+      message: newReview.message,
+    };
 
     try {
-      const response = await axios.post('http://localhost:5000/api/reviews', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      setReviews([...reviews, response.data.review]); // Update state with new review
+      const response = await axios.post('http://localhost:5000/api/reviews', reviewData);
+      setReviews([...reviews, response.data.review]);
       handleClose();
     } catch (error) {
       console.error('Error adding review:', error);
+    }
+  };
+
+  const handleDeleteReview = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/reviews/${id}`);
+      setReviews(reviews.filter((review) => review._id !== id)); // Filter out the deleted review
+    } catch (error) {
+      console.error('Error deleting review:', error);
     }
   };
 
@@ -81,21 +82,23 @@ const ReviewsPage = () => {
                 <TableCell>Name</TableCell>
                 <TableCell>Date</TableCell>
                 <TableCell>Message</TableCell>
-                <TableCell>Image</TableCell>
+                <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {reviews.map((review, index) => (
-                <TableRow key={index}>
+              {reviews.map((review) => (
+                <TableRow key={review._id}>
                   <TableCell>{review.name}</TableCell>
                   <TableCell>{review.date}</TableCell>
                   <TableCell>{review.message}</TableCell>
                   <TableCell>
-                    {review.imageUrl ? (
-                      <img src={review.imageUrl} alt="Review" style={{ width: '100px' }} />
-                    ) : (
-                      'No Image'
-                    )}
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => handleDeleteReview(review._id)}
+                    >
+                      Delete
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -130,13 +133,6 @@ const ReviewsPage = () => {
               rows={4}
               value={newReview.message}
               onChange={(e) => setNewReview({ ...newReview, message: e.target.value })}
-              sx={{ marginBottom: 2 }}
-            />
-            <TextField
-              label="Image Upload"
-              type="file"
-              fullWidth
-              onChange={(e) => setFile(e.target.files[0])} // Set file state
               sx={{ marginBottom: 2 }}
             />
           </DialogContent>
