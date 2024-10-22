@@ -21,17 +21,24 @@ const Profile = () => {
   });
 
   useEffect(() => {
+    const token = localStorage.getItem("token"); // Get the token from localStorage
     if (userId) {
-      axios.get(`http://localhost:5000/api/users/${userId}`)
+      axios
+        .get(`http://localhost:5000/api/users/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
+          },
+        })
         .then((response) => {
-          const userData = response.data;
+          const userData = response.data; // Store response data
           console.log("Fetched User Data:", userData); // Log the fetched data
-          setUser(userData);
-          setSelectedImage(`http://localhost:5000/${userData.profileImage}`);
+          setUser(userData); // Set user state
+          setSelectedImage(`http://localhost:5000/${userData.profileImage}`); // Set profile image
         })
         .catch((error) => console.error("Error fetching user data:", error));
     }
-  }, [userId]);
+  }, [userId]); // Dependency array with userId
+  
 
 
   const handleImageChange = (event) => {
@@ -65,7 +72,7 @@ const Profile = () => {
           position: "relative",
         }}
       >
-        <CreditScoreGraph score={600} />
+        <CreditScoreGraph score={400} />
         {/* Profile Image */}
         <Box sx={{ position: "relative" }}>
           <Avatar
