@@ -1,24 +1,35 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Avatar, IconButton, List, ListItem, ListItemText } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Avatar,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
 import { Edit } from "@mui/icons-material"; // Import Edit icon
 import Navbar from "../../components/Navbar";
 import axios from "axios"; // Import axios to make API calls
 import { useRouter } from "next/router"; // Import useRouter for dynamic routing
 import "../../app/globals.css";
-import CreditScoreGraph from '../../components/CreditScoreGraph';
-
+import CreditScoreGraph from "../../components/CreditScoreGraph";
 
 const Profile = () => {
-    const router = useRouter(); // Initialize useRouter
-    const { id: userId } = router.query;
+  const router = useRouter(); // Initialize useRouter
+  const { id: userId } = router.query;
+
   const [selectedImage, setSelectedImage] = useState(null); // State to store selected image
   const [user, setUser] = useState({
-    fullName: '',
-    email: '',
-    creditScore: 0,
-    profileImage: '',
-    invoices: [] // Add invoices to user state
+    fullName: "",
+    email: "",
+    creditScore: [], // Initialize as an array to store credit scores
+    profileImage: "",
+    invoices: [], // Add invoices to user state
   });
+
+  const [firstScore, setFirstScore] = useState(null); // Store the first score
+  const [latestScore, setLatestScore] = useState(null); // Store the latest score
 
   useEffect(() => {
     const token = localStorage.getItem("token"); // Get the token from localStorage
@@ -34,12 +45,18 @@ const Profile = () => {
           console.log("Fetched User Data:", userData); // Log the fetched data
           setUser(userData); // Set user state
           setSelectedImage(`http://localhost:5000/${userData.profileImage}`); // Set profile image
+
+          // Extract first and latest credit scores
+          if (userData.creditScore.length > 0) {
+            setFirstScore(userData.creditScore[0]); // First score
+            setLatestScore(
+              userData.creditScore[userData.creditScore.length - 1]
+            ); // Latest score
+          }
         })
         .catch((error) => console.error("Error fetching user data:", error));
     }
   }, [userId]); // Dependency array with userId
-  
-
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -58,8 +75,6 @@ const Profile = () => {
   return (
     <>
       <Navbar />
-      
-
 
       <Box
         sx={{
@@ -72,7 +87,14 @@ const Profile = () => {
           position: "relative",
         }}
       >
-        <CreditScoreGraph score={400} />
+        {/* Render the graphs with the first and latest scores */}
+        {firstScore !== null && (
+          <CreditScoreGraph score={firstScore} title="First Credit Score" />
+        )}
+        {latestScore !== null && (
+          <CreditScoreGraph score={latestScore} title="Latest Credit Score" />
+        )}
+
         {/* Profile Image */}
         <Box sx={{ position: "relative" }}>
           <Avatar
@@ -107,22 +129,30 @@ const Profile = () => {
         </Box>
 
         {/* Name */}
-        <Typography className="ProfileName" variant="h5" sx={{ color: "#191919", marginBottom: 1 }}>
+        <Typography
+          className="ProfileName"
+          variant="h5"
+          sx={{ color: "#191919", marginBottom: 1 }}
+        >
           {user.fullName} {/* Dynamic Name from backend/localStorage */}
         </Typography>
 
         {/* Email */}
-        <Typography className="ProfileInfo" variant="body1" sx={{ color: "#757575", marginBottom: 1 }}>
+        <Typography
+          className="ProfileInfo"
+          variant="body1"
+          sx={{ color: "#757575", marginBottom: 1 }}
+        >
           {user.email} {/* Dynamic Email from backend/localStorage */}
         </Typography>
 
         {/* Credit Score */}
         <Typography className="ProfileInfo" variant="body1" sx={{ color: "#757575" }}>
-          Credit score: {user.creditScore} {/* Dynamic Credit Score */}
+          Credit Scores: {user.creditScore.join(", ")} {/* Display all scores */}
         </Typography>
 
         {/* Invoices Section */}
-        <Box sx={{ width: '100%', marginTop: 3 }}>
+        <Box sx={{ width: "100%", marginTop: 3 }}>
           <Typography variant="h6" sx={{ marginBottom: 2 }}>
             Invoices
           </Typography>
@@ -131,30 +161,29 @@ const Profile = () => {
             <List>
               {user.invoices.map((invoice, index) => (
                 <ListItem key={invoice._id}>
-                <ListItemText
-                  primary={`Name: ${invoice.name}`} // Display the name of the invoice
-                  secondary={
-                    <>
-                      <Typography component="span" variant="body2">
-                        Message: {invoice.message}
-                      </Typography>
-                      <br />
-                      <Typography component="span" variant="body2">
-                        Price: ${invoice.price}
-                      </Typography>
-                      <br />
-                      <Typography component="span" variant="body2">
-                        Date: {new Date(invoice.date).toLocaleDateString()}
-                      </Typography>
-                      <br />
-                      <Typography component="span" variant="body2">
-                        Due Date: {new Date(invoice.dueDate).toLocaleDateString()}
-                      </Typography>
-                    </>
-                  }
-                />
-              </ListItem>
-              
+                  <ListItemText
+                    primary={`Name: ${invoice.name}`} // Display the name of the invoice
+                    secondary={
+                      <>
+                        <Typography component="span" variant="body2">
+                          Message: {invoice.message}
+                        </Typography>
+                        <br />
+                        <Typography component="span" variant="body2">
+                          Price: ${invoice.price}
+                        </Typography>
+                        <br />
+                        <Typography component="span" variant="body2">
+                          Date: {new Date(invoice.date).toLocaleDateString()}
+                        </Typography>
+                        <br />
+                        <Typography component="span" variant="body2">
+                          Due Date: {new Date(invoice.dueDate).toLocaleDateString()}
+                        </Typography>
+                      </>
+                    }
+                  />
+                </ListItem>
               ))}
             </List>
           ) : (
