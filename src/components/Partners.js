@@ -2,28 +2,30 @@ import React, { useEffect } from 'react';
 import Image from 'next/image'; // Import Next.js Image component
 import WOW from 'wowjs';
 import 'animate.css'; // Import animate.css for animations
+import first from "../app/assets/imgs/Logos/4c8d69c2c0cbad57813e2c24f56521a5x.png";
+import second from "../app/assets/imgs/Logos/apple-touch-icon.png";
+import third from "../app/assets/imgs/Logos/highgarden-logo.png";
+import fourth from "../app/assets/imgs/Logos/indy-chamber-logo.png";
+import fifth from "../app/assets/imgs/Logos/logo-horizontal.png";
+import six from "../app/assets/imgs/Logos/myScoreIQ-Logo.png";
+import seven from "../app/assets/imgs/Logos/REMAX-logo.png";
+import eight from "../app/assets/imgs/Logos/show_image.png";
+import nin from "../app/assets/imgs/Logos/Silverton_logo-vert_RGB_1200px-768x498.png";
+import ten from "../app/assets/imgs/Logos/TruebloodLogo-dark.png";
+import eleven from "../app/assets/imgs/Logos/ttk-logo.png";
 
 const partners = [
-  {
-    id: 1,
-    name: 'Partner One',
-    logo: 'https://via.placeholder.com/150',
-  },
-  {
-    id: 2,
-    name: 'Partner Two',
-    logo: 'https://via.placeholder.com/150',
-  },
-  {
-    id: 3,
-    name: 'Partner Three',
-    logo: 'https://via.placeholder.com/150',
-  },
-  {
-    id: 4,
-    name: 'Partner Four',
-    logo: 'https://via.placeholder.com/150',
-  },
+  { id: 1, name: 'Partner One', logo: first },
+  { id: 2, name: 'Partner Two', logo: second },
+  { id: 3, name: 'Partner Three', logo: third },
+  { id: 4, name: 'Partner Four', logo: fourth },
+  { id: 5, name: 'Partner Five', logo: fifth },
+  { id: 6, name: 'Partner Six', logo: six },
+  { id: 7, name: 'Partner Seven', logo: seven },
+  { id: 8, name: 'Partner Eight', logo: eight },
+  { id: 9, name: 'Partner Nine', logo: nin },
+  { id: 10, name: 'Partner Ten', logo: ten },
+  { id: 11, name: 'Partner Eleven', logo: eleven },
 ];
 
 const PartnersSection = () => {
@@ -46,7 +48,7 @@ const PartnersSection = () => {
           {partners.map((partner, index) => (
             <div
               key={partner.id}
-              className="flex items-center justify-center wow animate__animated animate__fadeInUp"
+              className={`flex items-center justify-center wow animate__animated animate__fadeInUp ${partner.id === 4 ? 'bg-gray-200 p-4 rounded' : ''}`}
               data-wow-delay={`${index * 0.2}s`} // Add delay for staggered animation
             >
               <Image
