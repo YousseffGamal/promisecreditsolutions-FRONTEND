@@ -62,10 +62,29 @@ const AdminPanel = () => {
     setAnchorEl(null);
   };
 
-  const handleDelete = () => {
-    console.log(`Deleted user with ID: ${currentUserId}`);
-    handleClose();
+
+  const handleDelete = async () => {
+    const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
+  
+    try {
+      // Make the DELETE request with the Authorization header
+      await axios.delete(`http://localhost:5000/api/users/${currentUserId}`, {
+        headers: {
+          Authorization: `Bearer ${token}` // Include the token
+        }
+      });
+  
+      // Log the success message
+      console.log(`Deleted user with ID: ${currentUserId}`);
+      
+      // Close the modal or perform any additional actions
+      handleClose();
+    } catch (error) {
+      // Handle any errors (e.g., user not found, network error)
+      console.error("Error deleting user:", error);
+    }
   };
+  
 
   const getPaymentStatusStyles = (paymentStatus) => {
     switch (paymentStatus) {
