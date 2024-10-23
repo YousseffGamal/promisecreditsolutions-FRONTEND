@@ -90,7 +90,6 @@
 // };
 
 // export default CreditScoreGraph;import React from 'react';
-
 const CreditScoreGraph = ({ score }) => {
   const getColorForScore = (score) => {
     if (score < 560) return '#FF6F61'; // Very Bad
@@ -103,32 +102,53 @@ const CreditScoreGraph = ({ score }) => {
   const calculateAngle = (score) => {
     const minScore = 300;
     const maxScore = 850;
-    const angle = ((score - minScore) / (maxScore - minScore)) * 180; // 0 to 180 degrees
+    const angle = ((score - minScore) / (maxScore - minScore)) * 180;
     return angle;
   };
 
   const drawArc = (score) => {
     const angle = calculateAngle(score);
-    const radius = 130; // Increase radius for a larger chart
-    const x = 175 + radius * Math.cos((180 - angle) * (Math.PI / 180));
-    const y = 175 - radius * Math.sin((180 - angle) * (Math.PI / 180));
-    const largeArcFlag = angle > 180 ? 1 : 0;
+    const radius = 130;
+    const centerX = 200;
+    const centerY = 175;
 
-    return `M 50,175 A ${radius},${radius} 0 ${largeArcFlag} 1 ${x},${y}`;
+    const x = centerX + radius * Math.cos((180 - angle) * (Math.PI / 180));
+    const y = centerY - radius * Math.sin((180 - angle) * (Math.PI / 180));
+
+    const largeArcFlag = angle > 180 ? 1 : 0;
+    return `M ${centerX - radius},${centerY} A ${radius},${radius} 0 ${largeArcFlag} 1 ${x},${y}`;
   };
 
   return (
     <svg width="400" height="300" viewBox="0 0 400 300">
+      <defs>
+        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#FF6F61" />
+          <stop offset="50%" stopColor="#FFD700" />
+          <stop offset="100%" stopColor="#008000" />
+        </linearGradient>
+      </defs>
+
       <path
         d={drawArc(score)}
         fill="none"
-        stroke={getColorForScore(score)}
+        stroke="url(#gradient)"
         strokeWidth="20"
+        strokeLinecap="round"
       />
-      <text x="200" y="210" textAnchor="middle" fontSize="28" fontWeight="bold">
+
+      <text
+        x="200"
+        y="210"
+        textAnchor="middle"
+        fontSize="32"
+        fontWeight="bold"
+        fill={getColorForScore(score)}
+      >
         {score}
       </text>
-      <text x="200" y="240" textAnchor="middle" fontSize="20">
+
+      <text x="200" y="240" textAnchor="middle" fontSize="20" fill="#555">
         {score < 560
           ? 'Very Bad'
           : score < 650
@@ -140,11 +160,19 @@ const CreditScoreGraph = ({ score }) => {
           : 'Excellent'}
       </text>
 
-      {/* Adjusted Labels for Score Ranges */}
-      <text x="50" y="260" fontSize="16">300</text>
-      <text x="120" y="50" fontSize="16">560</text>
-      <text x="280" y="50" fontSize="16">650</text>
-      <text x="350" y="260" fontSize="16">850</text>
+      {/* Score Range Labels */}
+      <text x="30" y="260" fontSize="16" fill="#333">
+        300
+      </text>
+      <text x="110" y="50" fontSize="16" fill="#333">
+        560
+      </text>
+      <text x="290" y="50" fontSize="16" fill="#333">
+        650
+      </text>
+      <text x="370" y="260" fontSize="16" fill="#333">
+        850
+      </text>
     </svg>
   );
 };

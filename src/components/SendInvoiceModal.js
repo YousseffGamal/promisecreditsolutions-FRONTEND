@@ -23,7 +23,7 @@ const SendInvoiceModal = ({ open, onClose, userId }) => {
 
     try {
         const response = await axios.post(`http://localhost:5000/api/invoices`, {
-            name: formData.description,
+            name: formData.name,
             date: new Date().toISOString().split("T")[0], // Current date
             message: formData.description, // Message from form
             price: formData.amount, // Price from form
@@ -58,18 +58,21 @@ const SendInvoiceModal = ({ open, onClose, userId }) => {
           boxShadow: 24, // Optional: Add shadow for better visual effect
         }}
       >
-        <Typography variant="h6" gutterBottom>
-          Send Invoice
-        </Typography>
-        {/* Display the user ID at the top of the form */}
-        <Typography variant="subtitle1" sx={{ marginBottom: 2 }}>
-          Sending invoice for User ID: <strong>{userId}</strong>
-        </Typography>
+        
         <form onSubmit={handleSubmit}>
           <TextField
             label="Amount"
             name="amount"
             value={formData.amount}
+            onChange={handleInputChange}
+            fullWidth
+            required
+            margin="normal"
+          />
+          <TextField
+            label="Name"
+            name="name"
+            value={formData.name}
             onChange={handleInputChange}
             fullWidth
             required
@@ -84,9 +87,7 @@ const SendInvoiceModal = ({ open, onClose, userId }) => {
             required
             margin="normal"
             type="date"
-            InputLabelProps={{
-              shrink: true,
-            }}
+            
           />
           <TextField
             label="Description"

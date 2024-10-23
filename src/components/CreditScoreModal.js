@@ -30,7 +30,7 @@ const CreditScoreModal = ({ open, onClose, onSubmit, userId }) => {
 
       // Send a PUT request to update the user's credit score
       const response = await fetch(`http://localhost:5000/api/users/${userId}/credit-score`, {
-        method: 'PUT',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
