@@ -210,144 +210,202 @@ const AdminPanel = () => {
   };
   return (
     <Layout>
-    <Box sx={{ p: 3, backgroundColor: '#F1F1F1', color: '#e0e0e0', marginTop: '65px' }}>
-      {/* Statistics Boxes */}
-      <Box sx={{ display: 'flex', gap: 2, mb: 4, flexDirection: { xs: 'column', sm: 'row' } }}>
-        {stats.map((stat, index) => (
-          <Box
-            key={index}
-            sx={{
-              backgroundColor: stat.bgColor,
-              padding: '16px',
-              borderRadius: '30px',
-              width: { xs: '100%', sm: '465px' },
-              height: '195px',
-              textAlign: 'center',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-            }}
-          >
-            <Typography
-              className='CardNumber'
-              variant="h1"
+      <Box sx={{ p: 3, backgroundColor: '#F1F1F1', color: '#e0e0e0', marginTop: '65px' }}>
+        {/* Statistics Boxes */}
+        <Box sx={{ display: 'flex', gap: 2, mb: 4, flexDirection: { xs: 'column', sm: 'row' } }}>
+          {stats.map((stat, index) => (
+            <Box
+              key={index}
               sx={{
-                color: stat.textColor,
-                fontWeight: 'bold',
-                fontSize: { xs: '2rem', sm: '3rem', md: '4rem', lg: '78px' },
+                backgroundColor: stat.bgColor,
+                padding: '16px',
+                borderRadius: '30px',
+                width: { xs: '100%', sm: '465px' },
+                height: '195px',
+                textAlign: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
               }}
             >
-              {stat.value}
-            </Typography>
-            <Box
-              sx={{
-                width: '60%',
-                height: '1px',
-                backgroundColor: stat.textColor,
-                my: 1,
-                opacity: 0.5,
-                mx: 'auto',
-              }}
-            />
-            <Typography className='TitleCard' variant="h6" sx={{ color: stat.textColor }}>
-              {stat.title}
-            </Typography>
-          </Box>
-        ))}
-      </Box>
+              <Typography
+                className='CardNumber'
+                variant="h1"
+                sx={{
+                  color: stat.textColor,
+                  fontWeight: 'bold',
+                  fontSize: { xs: '2rem', sm: '3rem', md: '4rem', lg: '78px' },
+                }}
+              >
+                {stat.value}
+              </Typography>
+              <Box
+                sx={{
+                  width: '60%',
+                  height: '1px',
+                  backgroundColor: stat.textColor,
+                  my: 1,
+                  opacity: 0.5,
+                  mx: 'auto',
+                }}
+              />
+              <Typography className='TitleCard' variant="h6" sx={{ color: stat.textColor }}>
+                {stat.title}
+              </Typography>
+            </Box>
+          ))}
+        </Box>
 
-      {/* Labels, Switch, and Role Dropdown */}
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start', mb: 2 }}>
-        <Typography variant="h6" sx={{ color: activeTab === 0 ? '#0177FB' : '#000', mr: 2 }}>
-          Invoices
-        </Typography>
-        <Switch
-          checked={activeTab === 1}
-          onChange={handleSwitchChange}
-          inputProps={{ 'aria-label': 'Switch between Leads and Clients' }}
+        {/* Labels, Switch, and Role Dropdown */}
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start', mb: 2 }}>
+          <Typography variant="h6" sx={{ color: activeTab === 0 ? '#0177FB' : '#000', mr: 2 }}>
+            Invoices
+          </Typography>
+          <Switch
+            checked={activeTab === 1}
+            onChange={handleSwitchChange}
+            inputProps={{ 'aria-label': 'Switch between Leads and Clients' }}
+          />
+          <Typography variant="h6" sx={{ color: activeTab === 1 ? '#0177FB' : '#000', ml: 2 }}>
+            Users
+          </Typography>
+        </Box>
+
+        {/* Table based on active tab */}
+        <TableContainer component={Paper} sx={{ backgroundColor: '#FFFFFF', color: '#ffffff', borderRadius: '30px', mt: 2, overflowX: 'auto' }}>
+          <Table sx={{ minWidth: 650 }} aria-label="user table">
+            <TableHead>
+              <TableRow>
+                {activeTab === 0 ? (
+                  <>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Invoice</TableCell>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Date</TableCell>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Price</TableCell>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Payment Status</TableCell>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Due Date</TableCell>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Action</TableCell>
+                  </>
+                ) : (
+                  <>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Client Name</TableCell>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Email</TableCell>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Role</TableCell>
+                    {/* <TableCell className='TableHeader' sx={{ color: '#667085' }}>Send Invoice</TableCell> */}
+                    {/* <TableCell className='TableHeader' sx={{ color: '#667085' }}>Credit Score</TableCell> */}
+
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Action</TableCell>
+                  </>
+                )}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {(activeTab === 0 ? leadsData : clientsData)
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => (
+                  <TableRow key={index}>
+                    {activeTab === 0 ? (
+                      <>
+                                 <TableCell>{row.name}</TableCell>
+                        <TableCell>{new Date(row.date).toLocaleDateString()}</TableCell>
+                        <TableCell>{row.price}</TableCell>
+                        <TableCell>
+                          <span style={getPaymentStatusStyles(row.paymentStatus)}>
+                            {row.paymentStatus}
+                          </span>
+                        </TableCell>
+                        <TableCell>{row.dueDate}</TableCell>
+                        <TableCell>
+                          <MoreVertIcon onClick={(event) => handleClick(event, row._id)} />
+                          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+                            <MenuItem onClick={handleDeleteInvoice}>Delete</MenuItem> {/* Call delete function here */}
+                          </Menu>
+
+                        </TableCell>
+                      </>
+                    ) : (
+                      <>
+                        <TableCell>{row.fullName}</TableCell>
+                        <TableCell>{row.email}</TableCell>
+                        <TableCell>{row.role}</TableCell>
+                        {/* <TableCell>
+                        <Button
+        onClick={handleSendInvoice}
+        className="editButton"
+        sx={{
+          color: 'white',
+          backgroundColor: '#0177FB',
+          padding: '8px 16px',
+          borderRadius: '25px',
+          '&:hover': { backgroundColor: '#0166D4' },
+        }}
+      >
+        Send
+      </Button>
+    
+</TableCell> */}
+                        {/* <TableCell>
+
+                          <SendInvoiceModal
+                            open={modalOpen}
+                            onClose={handleCloseModal}
+                            userId={row._id} // Pass the userId to the modal
+                          />
+                          <Button
+                            onClick={() => handleOpenCreditScoreModal(row._id)} // Pass userId to open modal
+                            variant="contained"
+                            sx={{ backgroundColor: '#0177FB', color: '#fff' }}
+                          >
+                            Enter Credit Score
+                          </Button>
+                       
+
+
+                        </TableCell> */}
+                        <CreditScoreModal
+                            open={showCreditScoreModal}
+                            onClose={() => setShowCreditScoreModal(false)}
+                            onSubmit={handleCreditScoreSubmit}
+                            userId={currentUserId}
+                          />
+                          {creditScores[row._id] && ( // Check if score exists for the user
+                            <CreditScoreGraph score={creditScores[row._id]} /> // Pass the score to your graph
+                          )}
+
+                        <TableCell>
+                          <MoreVertIcon onClick={(event) => handleClick(event, row._id)} />
+                          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+                            <MenuItem onClick={handleDeleteInvoice}>Delete</MenuItem>
+                            <MenuItem onClick={handleSendInvoice} >Send Invoice	</MenuItem>
+                            <MenuItem onClick={() => handleOpenCreditScoreModal(row._id)} // Pass userId to open modal
+                            > Enter Credit Score</MenuItem>
+
+                          </Menu>
+                          {modalOpen && (
+          <SendInvoiceModal
+            open={modalOpen}
+            onClose={handleCloseModal}
+            userId={currentUserId}
+          />
+        )}
+                        </TableCell>
+                      </>
+                    )}
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={activeTab === 0 ? leadsData.length : clientsData.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
-        <Typography variant="h6" sx={{ color: activeTab === 1 ? '#0177FB' : '#000', ml: 2 }}>
-          Users
-        </Typography>
       </Box>
-
-      {/* Table based on active tab */}
-      <TableContainer component={Paper} sx={{ backgroundColor: '#FFFFFF', color: '#ffffff', borderRadius: '30px', mt: 2, overflowX: 'auto' }}>
-        <Table sx={{ minWidth: 650 }} aria-label="user table">
-          <TableHead>
-            <TableRow>
-              {activeTab === 0 ? (
-                <>
-                  <TableCell className='TableHeader' sx={{ color: '#667085' }}>Invoice</TableCell>
-                  <TableCell className='TableHeader' sx={{ color: '#667085' }}>Date</TableCell>
-                  <TableCell className='TableHeader' sx={{ color: '#667085' }}>Price</TableCell>
-                  <TableCell className='TableHeader' sx={{ color: '#667085' }}>Payment Status</TableCell>
-                  <TableCell className='TableHeader' sx={{ color: '#667085' }}>Due Date</TableCell>
-                  <TableCell className='TableHeader' sx={{ color: '#667085' }}>Action</TableCell>
-                </>
-              ) : (
-                <>
-                  <TableCell className='TableHeader' sx={{ color: '#667085' }}>Client Name</TableCell>
-                  <TableCell className='TableHeader' sx={{ color: '#667085' }}>Email</TableCell>
-                  <TableCell className='TableHeader' sx={{ color: '#667085' }}>Role</TableCell>
-                  <TableCell className='TableHeader' sx={{ color: '#667085' }}>Action</TableCell>
-                </>
-              )}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {(activeTab === 0 ? leadsData : clientsData)
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row, index) => (
-                <TableRow key={index}>
-                  {activeTab === 0 ? (
-                    <>
-                      <TableCell>{row.name}</TableCell>
-                      <TableCell>{new Date(row.date).toLocaleDateString()}</TableCell>
-                      <TableCell>{row.price}</TableCell>
-                      <TableCell>
-                        <span style={getPaymentStatusStyles(row.paymentStatus)}>
-                          {row.paymentStatus}
-                        </span>
-                      </TableCell>
-                      <TableCell>{row.dueDate}</TableCell>
-                      <TableCell>
-                        <MoreVertIcon onClick={(event) => handleClick(event, row._id)} />
-                        <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-                          <MenuItem onClick={handleDeleteInvoice}>Delete</MenuItem> {/* Call delete function here */}
-                        </Menu>
-
-                      </TableCell>
-                    </>
-                  ) : (
-                    <>
-                      <TableCell>{row.fullName}</TableCell>
-                      <TableCell>{row.email}</TableCell>
-                      <TableCell>{row.role}</TableCell>
-                      <TableCell>
-                        <MoreVertIcon onClick={(event) => handleClick(event, row._id)} />
-                        <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-                          <MenuItem onClick={handleDelete}>Delete</MenuItem>
-                        </Menu>
-                      </TableCell>
-                    </>
-                  )}
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={activeTab === 0 ? leadsData.length : clientsData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Box>
-  </Layout>
+    </Layout>
   );
 };
 
