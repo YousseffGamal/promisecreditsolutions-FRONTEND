@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image"; // Import Next.js Image component
 import { FaUserCircle, FaBell } from "react-icons/fa"; // Import the profile and notification icons
 import Logo from "../app/assets/imgs/pcs-1-logo_-n.png"; // Adjust the path as necessary
-
+import DefultImage  from "../app/assets/imgs/profile.png"
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // State to manage the open/close status of the mobile menu
   const [dropdownOpen, setDropdownOpen] = useState(false); // State to manage the dropdown visibility
@@ -146,26 +146,26 @@ const Navbar = () => {
             <>
               <div className="relative dropdown">
                 <button onClick={toggleDropdown} className="flex items-center">
-                  <Image
-                    src={`http://localhost:5000/${user.profileImage}`} // Fixing the image source
-                    alt="Profile Image"
-                    width={60}
-                    height={80}
-                    style={{ borderRadius: '50%' }}
-                  />
+                <Image
+  src={user?.profileImage ? `http://localhost:5000/${user.profileImage}` : DefultImage} 
+  alt="Profile Image"
+  width={60}
+  height={80}
+  style={{ borderRadius: '50%' }}
+/>
                 </button>
                 {/* Dropdown Menu */}
                 {dropdownOpen && (
                   <div className="absolute right-0 z-10 w-48 mt-2 bg-white rounded-lg shadow-lg border border-gray-300">
                     <div className="px-4 py-2 text-sm text-gray-700">
                       <div className="flex items-center space-x-2 mb-2">
-                        <Image
-                          src={`http://localhost:5000/${user.profileImage}`} // Fixing the image source
-                          alt="Profile Image"
+                        {/* <Image
+  src={user?.profileImage ? `http://localhost:5000/${user.profileImage}` : DefultImage} 
+  alt="Profile Image"
                           width={60}
                           height={80}
                           style={{ borderRadius: '50%' }}
-                        />
+                        /> */}
                       </div>
                       
                       <div style={{ display: "block" }}>

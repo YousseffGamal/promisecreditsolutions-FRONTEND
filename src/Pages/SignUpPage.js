@@ -1,6 +1,7 @@
 "use client"; // Mark this component as a Client Component
 import React, { useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/router"; // Use Next.js useRouter hook
 import "../app/globals.css";
 
 const SignUpPage = () => {
@@ -11,6 +12,8 @@ const SignUpPage = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  
+  const router = useRouter(); // Initialize useRouter
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,29 +36,29 @@ const SignUpPage = () => {
   
       setSuccessMessage(response.data.message || "Registration successful!");
       setErrorMessage(""); // Clear any previous error messages
+
+      // Redirect to login page after a short delay
+      setTimeout(() => {
+        router.push("/loginpage"); // Use router.push to navigate in Next.js
+      }, 2000); // Wait for 2 seconds before redirecting
     } catch (error) {
-      // Check if error is an Axios error with a response
       if (error.response) {
-        // The request was made and the server responded with a status code
         setErrorMessage(error.response.data.message || "An error occurred during registration.");
       } else if (error.request) {
-        // The request was made but no response was received
         setErrorMessage("No response received from server.");
       } else {
-        // Something happened in setting up the request that triggered an error
         setErrorMessage("Error: " + error.message);
       }
-      
       setSuccessMessage(""); // Clear any previous success messages
     }
   };
-  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold text-center text-purple-600">Create an Account</h2>
         <form className="space-y-6" onSubmit={handleSubmit}>
+          {/* Form fields */}
           <div>
             <label htmlFor="name" className="block mb-1 text-sm font-semibold text-gray-700">Full Name</label>
             <input

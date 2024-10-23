@@ -112,7 +112,7 @@ const LoginPage = () => {
               />
               <label htmlFor="remember" className="text-sm text-gray-600">Remember me</label>
             </div>
-            <a href="#" className="text-sm text-purple-600 hover:underline">Forgot Password?</a>
+            {/* <a href="#" className="text-sm text-purple-600 hover:underline">Forgot Password?</a> */}
           </div>
           <button
             type="submit"
