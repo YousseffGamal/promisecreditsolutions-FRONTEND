@@ -374,7 +374,7 @@ const AdminPanel = () => {
                         <TableCell>
                           <MoreVertIcon onClick={(event) => handleClick(event, row._id)} />
                           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-                            <MenuItem onClick={handleDeleteInvoice}>Delete</MenuItem>
+                            <MenuItem onClick={handleDelete}>Delete</MenuItem>
                             <MenuItem onClick={handleSendInvoice} >Send Invoice	</MenuItem>
                             <MenuItem onClick={() => handleOpenCreditScoreModal(row._id)} // Pass userId to open modal
                             > Enter Credit Score</MenuItem>
