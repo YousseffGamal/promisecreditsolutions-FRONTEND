@@ -211,6 +211,13 @@ const AdminPanel = () => {
       console.error('Error deleting invoice:', error);
     }
   };
+
+
+  const handleUpdateInvoice = (invoiceId) => {
+    // Redirect to the Edit Payment Status page, passing the invoice ID in the URL
+    router.push(`/edit-payment-status/${invoiceId}`);
+  };
+  
   return (
     <Layout>
       <Box sx={{ p: 3, backgroundColor: '#F1F1F1', color: '#e0e0e0', marginTop: '65px' }}>
@@ -320,7 +327,8 @@ const AdminPanel = () => {
                         <TableCell>
                           <MoreVertIcon onClick={(event) => handleClick(event, row._id)} />
                           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-                            <MenuItem onClick={handleDeleteInvoice}>Delete</MenuItem> {/* Call delete function here */}
+                            <MenuItem onClick={handleDeleteInvoice}>Delete</MenuItem>
+                            <MenuItem onClick={() => handleUpdateInvoice(currentUserId)}>Edit Payment Status</MenuItem>
                           </Menu>
 
                         </TableCell>

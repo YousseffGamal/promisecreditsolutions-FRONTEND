@@ -201,6 +201,8 @@
 
 
 
+
+
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -210,9 +212,6 @@ import {
   Card,
   CardContent,
   Button,
-  List,
-  ListItem,
-  ListItemText,
   Table,
   TableBody,
   TableCell,
@@ -279,96 +278,125 @@ const Profile = () => {
   return (
     <>
       <Navbar />
-
       <Box
         sx={{
+          minHeight: "100vh",
+          paddingTop: "5rem",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
-          p: 3,
-          marginTop: "109px",
-          position: "relative",
+          backgroundColor: "#f5f5f5", // Subtle light grey background for page
         }}
       >
-        {/* Render the graphs */}
-        <Box sx={{ display: "flex", gap: 3, marginBottom: 4 }}>
-          {firstScore !== null && (
-            <CreditScoreGraph score={firstScore} title="First Credit Score" />
-          )}
-          {latestScore !== null && (
-            <CreditScoreGraph score={latestScore} title="Latest Credit Score" />
-          )}
-        </Box>
-
-        {/* Profile Image Card */}
-        <Card sx={{ maxWidth: 300, textAlign: "center", mb: 3 }}>
-          <CardContent>
-            <Avatar
-              alt="Profile Image"
-              src={selectedImage}
-              sx={{ width: 150, height: 150, margin: "0 auto" }}
-            />
-            <IconButton
-              onClick={handleEditClick}
-              sx={{
-                position: "absolute",
-                bottom: 10,
-                right: 10,
-                backgroundColor: "#000000",
-                "&:hover": { backgroundColor: "#333333" },
-              }}
-            >
-              <Edit sx={{ color: "#F1F1F1" }} />
-            </IconButton>
-            <input
-              type="file"
-              id="fileInput"
-              style={{ display: "none" }}
-              accept="image/*"
-              onChange={handleImageChange}
-            />
-            <Typography variant="h5" sx={{ mt: 2 }}>
-              {user.fullName}
-            </Typography>
-            <Typography variant="body1" color="textSecondary">
-              {user.email}
-            </Typography>
-          </CardContent>
+        {/* Profile Card */}
+        <Card
+          sx={{
+            maxWidth: 400,
+            textAlign: "center",
+            borderRadius: 3,
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+            backgroundColor: "#fff",
+            marginBottom: 4,
+            padding: 3,
+          }}
+        >
+          <Avatar
+            alt="Profile Image"
+            src={selectedImage}
+            sx={{
+              width: 150,
+              height: 150,
+              margin: "0 auto",
+              border: "6px solid #6a11cb",
+              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.15)",
+            }}
+          />
+          <Typography variant="h5" sx={{ mt: 2, fontWeight: "bold" }}>
+            {user.fullName}
+          </Typography>
+          <Typography variant="body1" color="textSecondary" sx={{ mb: 2 }}>
+            {user.email}
+          </Typography>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "#6a11cb",
+              "&:hover": { backgroundColor: "#2575fc" },
+              marginTop: 2,
+              borderRadius: 3,
+              padding: "10px 20px",
+              boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            Edit Profile
+          </Button>
         </Card>
 
-        {/* Credit Scores */}
-        <Box sx={{ width: "100%", maxWidth: 600, mb: 4 }}>
-          <Card variant="outlined">
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Credit Scores
-              </Typography>
-              <Typography>
-                {user.creditScore.length > 0
-                  ? user.creditScore.join(", ")
-                  : "No credit scores available."}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Box>
+        {/* Graphs and Credit Scores Card */}
+        <Card
+          sx={{
+            width: "90%",
+            maxWidth: 1000,
+            borderRadius: 3,
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+            backgroundColor: "#ffffff",
+            padding: 4,
+            marginBottom: 4,
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              gap: 5,
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: 4,
+            }}
+          >
+            {firstScore !== null && (
+              <Box sx={{ textAlign: "center" }}>
+                <CreditScoreGraph score={firstScore} title="First Credit Score" />
+              </Box>
+            )}
+            {latestScore !== null && (
+              <Box sx={{ textAlign: "center" }}>
+                <CreditScoreGraph score={latestScore} title="Latest Credit Score" />
+              </Box>
+            )}
+          </Box>
+
+          {/* Credit Scores Section */}
+          <Typography
+            variant="h6"
+            gutterBottom
+            sx={{ fontWeight: "bold", color: "#6a11cb", textAlign: "center" }}
+          >
+            Credit Scores
+          </Typography>
+          <Typography textAlign="center">
+            {user.creditScore.length > 0 ? (
+              <>
+                First: {firstScore}, Latest: {latestScore}
+              </>
+            ) : (
+              "No credit scores available."
+            )}
+          </Typography>
+        </Card>
 
         {/* Invoices Section */}
-        <Box sx={{ width: "100%", maxWidth: 800 }}>
-          <Typography variant="h6" sx={{ mb: 2 }}>
+        <Box sx={{ width: "100%", maxWidth: 800, marginBottom: 6 }}>
+          <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
             Invoices
           </Typography>
-
           {user.invoices.length > 0 ? (
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} sx={{ borderRadius: 3, boxShadow: 2 }}>
               <Table>
                 <TableBody>
                   {user.invoices.map((invoice) => (
                     <TableRow key={invoice._id}>
                       <TableCell>
-                        <Typography variant="subtitle1">
-                          {invoice.name}
-                        </Typography>
+                        <Typography variant="subtitle1">{invoice.name}</Typography>
                       </TableCell>
                       <TableCell>{invoice.message}</TableCell>
                       <TableCell>${invoice.price}</TableCell>
@@ -388,17 +416,35 @@ const Profile = () => {
           )}
         </Box>
 
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ mt: 4 }}
-          onClick={() => router.push("/edit-profile")}
+        {/* Floating Action Button */}
+        <IconButton
+          sx={{
+            position: "fixed",
+            bottom: 16,
+            right: 16,
+            backgroundColor: "#6a11cb",
+            "&:hover": { backgroundColor: "#2575fc" },
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)",
+          }}
         >
-          Edit Profile
-        </Button>
+          <Edit sx={{ color: "#ffffff" }} />
+        </IconButton>
       </Box>
+
+
+
     </>
   );
 };
 
 export default Profile;
+
+
+
+
+
+
+
+
+
+
