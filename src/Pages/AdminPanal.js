@@ -62,29 +62,11 @@ const AdminPanel = () => {
     setAnchorEl(null);
   };
 
-  
-
-  const handleDelete = async () => {
-    const token = localStorage.getItem("token");
-  
-    try {
-      // Make a DELETE request to your API to delete the user by ID
-      await axios.delete(`http://localhost:5000/api/users/${currentUserId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-  
-      // After successful deletion, remove the user from the local state
-      setClientsData((prevData) => prevData.filter((user) => user._id !== currentUserId));
-      console.log(`Deleted user with ID: ${currentUserId}`);
-  
-      handleClose(); // Close the dropdown menu after deletion
-    } catch (error) {
-      console.error('Error deleting user:', error);
-    }
+  const handleDelete = () => {
+    console.log(`Deleted user with ID: ${currentUserId}`);
+    handleClose();
   };
-  
+
   const getPaymentStatusStyles = (paymentStatus) => {
     switch (paymentStatus) {
       case 'pending':
@@ -190,26 +172,7 @@ const AdminPanel = () => {
     setCreditScores((prevScores) => ({ ...prevScores, [currentUserId]: score })); // Update score for the specific user
     setShowCreditScoreModal(false);
   };
-  const handleDeleteInvoice = async () => {
-    const token = localStorage.getItem("token");
 
-    try {
-      // Make a DELETE request to your API to delete the invoice by ID
-      await axios.delete(`http://localhost:5000/api/invoices/${currentUserId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      // After successful deletion, remove the invoice from the local state
-      setLeadsData((prevData) => prevData.filter((invoice) => invoice._id !== currentUserId));
-      console.log(`Deleted invoice with ID: ${currentUserId}`);
-
-      handleClose(); // Close the dropdown menu after deletion
-    } catch (error) {
-      console.error('Error deleting invoice:', error);
-    }
-  };
   return (
     <Layout>
       <Box sx={{ p: 3, backgroundColor: '#F1F1F1', color: '#e0e0e0', marginTop: '65px' }}>
@@ -307,7 +270,7 @@ const AdminPanel = () => {
                   <TableRow key={index}>
                     {activeTab === 0 ? (
                       <>
-                                 <TableCell>{row.name}</TableCell>
+                        <TableCell>{row.name}</TableCell>
                         <TableCell>{new Date(row.date).toLocaleDateString()}</TableCell>
                         <TableCell>{row.price}</TableCell>
                         <TableCell>
@@ -319,7 +282,7 @@ const AdminPanel = () => {
                         <TableCell>
                           <MoreVertIcon onClick={(event) => handleClick(event, row._id)} />
                           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-                            <MenuItem onClick={handleDeleteInvoice}>Delete</MenuItem> {/* Call delete function here */}
+                            <MenuItem onClick={handleDelete}>Delete</MenuItem>
                           </Menu>
 
                         </TableCell>
