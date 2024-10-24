@@ -218,6 +218,7 @@ import {
   TableContainer,
   TableRow,
   Paper,
+  TableHead,
 } from "@mui/material";
 import { Edit } from "@mui/icons-material"; 
 import Navbar from "../../components/Navbar";
@@ -392,6 +393,21 @@ const Profile = () => {
           {user.invoices.length > 0 ? (
             <TableContainer component={Paper} sx={{ borderRadius: 3, boxShadow: 2 }}>
               <Table>
+              <TableHead>
+              <TableRow>
+                
+                  <>
+                    
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Name</TableCell>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Message</TableCell>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Price</TableCell>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Date</TableCell>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Due Date</TableCell>
+                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Payment Status</TableCell>
+                  </>
+                
+              </TableRow>
+            </TableHead>
                 <TableBody>
                   {user.invoices.map((invoice) => (
                     <TableRow key={invoice._id}>
@@ -405,6 +421,9 @@ const Profile = () => {
                       </TableCell>
                       <TableCell>
                         {new Date(invoice.dueDate).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>
+                        {invoice.paymentStatus}
                       </TableCell>
                     </TableRow>
                   ))}
