@@ -35,7 +35,7 @@ const PartnersSection = () => {
   }, []);
 
   return (
-    <section className="bg-white py-16" id="partners">
+    <section className="bg-white py-16 overflow-hidden" id="partners">
       <div className="container mx-auto text-center px-6">
         <h2 className="text-5xl font-extrabold text-gray-800 mb-8 wow animate__animated animate__fadeInUp">
           Our Partners
@@ -44,23 +44,34 @@ const PartnersSection = () => {
           We are proud to collaborate with some of the best partners in the industry.
         </p>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {partners.map((partner, index) => (
-            <div
-              key={partner.id}
-              className={`flex items-center justify-center wow animate__animated animate__fadeInUp ${partner.id === 4 ? 'bg-gray-200 p-4 rounded' : ''}`}
-              data-wow-delay={`${index * 0.2}s`} // Add delay for staggered animation
-            >
-              <Image
-                src={partner.logo}
-                alt={`${partner.name} logo`}
-                width={150}  // Set image width
-                height={150} // Set image height
-                objectFit="contain"
-                className="mx-auto"
-              />
-            </div>
-          ))}
+        <div className="partners-track">
+          <div className="partners-list">
+            {partners.map((partner) => (
+              <div key={partner.id} className="partner-item wow animate__animated animate__fadeInUp">
+                <Image
+                  src={partner.logo}
+                  alt={`${partner.name} logo`}
+                  width={150}  // Set image width
+                  height={150} // Set image height
+                  objectFit="contain"
+                  className="mx-auto"
+                />
+              </div>
+            ))}
+            {/* Repeat logos to create a seamless loop */}
+            {partners.map((partner) => (
+              <div key={`repeat-${partner.id}`} className="partner-item wow animate__animated animate__fadeInUp">
+                <Image
+                  src={partner.logo}
+                  alt={`${partner.name} logo`}
+                  width={150}
+                  height={150}
+                  objectFit="contain"
+                  className="mx-auto"
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

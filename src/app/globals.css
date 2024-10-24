@@ -146,3 +146,27 @@ font-family: "LufgaLight" !important;
   background-color: rgba(255, 255, 255, 0.4) !important; /* Adjust opacity as needed */
   backdrop-filter: blur(10px); /* Apply blur effect */
 }
+
+.partners-track {
+  overflow: hidden;
+  white-space: nowrap; /* Prevent line breaks */
+}
+
+.partners-list {
+  display: inline-block; /* Align items in a single line */
+  animation: scroll 10s linear infinite; /* Adjust duration to make it faster */
+}
+
+.partner-item {
+  display: inline-block; /* Allow items to be side by side */
+  margin: 0 20px; /* Space between logos */
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%); /* Adjust to match the total width */
+  }
+}
