@@ -33,6 +33,7 @@ const AdminPanel = () => {
   const [clientsData, setClientsData] = useState([]);
   const [leadsData, setLeadsData] = useState([]);
   const [invoiceCount, setInvoiceCount] = useState(0); // Declare invoiceCount state
+  const [payedInvoiceCount, setPayedInvoiceCount] = useState(0);
   const router = useRouter(); // Define router here
   const [modalOpen, setModalOpen] = useState(false);
   const [showGraph, setShowGraph] = useState(false); // State to control graph visibility
@@ -45,7 +46,7 @@ const AdminPanel = () => {
   const stats = [
     { title: 'No. Of Users', value: userCount, bgColor: '#0177FB', textColor: '#fff' },
     { title: 'No. Of Invoice', value: invoiceCount, bgColor: '#FFFFFF', textColor: '#000000' }, // Use invoiceCount
-    { title: 'No. Of Sold Leads', value: 25, bgColor: '#FFFFFF', textColor: '#000000' },
+    { title: 'No. Of Sold Leads', value: payedInvoiceCount, bgColor: '#FFFFFF', textColor: '#000000' },
   ];
 
   const [page, setPage] = useState(0);
@@ -174,6 +175,28 @@ const AdminPanel = () => {
     fetchInvoiceCount(); // Fetch invoice count when the component mounts
   }, []);
 
+  
+    const fetchPayedInvoiceCount = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await axios.get('http://localhost:5000/api/invoices/countPaidInvoices', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        // Assuming your API returns the count in a specific format
+        setPayedInvoiceCount(response.data.count); // Adjust according to your API response format
+      } catch (error) {
+        console.error('Error fetching invoice count:', error);
+      }
+    };
+    
+
+    useEffect(() => {
+      fetchPayedInvoiceCount();
+    }, []);
+
 
   const handleSendInvoice = () => {
     setModalOpen(true); // Open the modal
@@ -220,6 +243,7 @@ const AdminPanel = () => {
   
   return (
     <Layout>
+      {}
       <Box sx={{ p: 3, backgroundColor: '#F1F1F1', color: '#e0e0e0', marginTop: '65px' }}>
         {/* Statistics Boxes */}
         <Box sx={{ display: 'flex', gap: 2, mb: 4, flexDirection: { xs: 'column', sm: 'row' } }}>
