@@ -1,206 +1,261 @@
+
+
+
+
 // import React, { useState, useEffect } from "react";
 // import {
 //   Box,
 //   Typography,
 //   Avatar,
 //   IconButton,
-//   List,
-//   ListItem,
-//   ListItemText,
+//   Card,
+//   CardContent,
+//   Button,
+//   Table,
+//   TableBody,
+//   TableCell,
+//   TableContainer,
+//   TableRow,
+//   Paper,
+//   TableHead,
 // } from "@mui/material";
-// import { Edit } from "@mui/icons-material"; // Import Edit icon
+// import { Edit } from "@mui/icons-material"; 
 // import Navbar from "../../components/Navbar";
-// import axios from "axios"; // Import axios to make API calls
-// import { useRouter } from "next/router"; // Import useRouter for dynamic routing
+// import axios from "axios";
+// import { useRouter } from "next/router";
 // import "../../app/globals.css";
 // import CreditScoreGraph from "../../components/CreditScoreGraph";
 
 // const Profile = () => {
-//   const router = useRouter(); // Initialize useRouter
+//   const router = useRouter();
 //   const { id: userId } = router.query;
 
-//   const [selectedImage, setSelectedImage] = useState(null); // State to store selected image
+//   const [selectedImage, setSelectedImage] = useState(null);
 //   const [user, setUser] = useState({
 //     fullName: "",
 //     email: "",
-//     creditScore: [], // Initialize as an array to store credit scores
+//     creditScore: [],
 //     profileImage: "",
-//     invoices: [], // Add invoices to user state
+//     invoices: [],
 //   });
 
-//   const [firstScore, setFirstScore] = useState(null); // Store the first score
-//   const [latestScore, setLatestScore] = useState(null); // Store the latest score
+//   const [firstScore, setFirstScore] = useState(null);
+//   const [latestScore, setLatestScore] = useState(null);
 
 //   useEffect(() => {
-//     const token = localStorage.getItem("token"); // Get the token from localStorage
+//     const token = localStorage.getItem("token");
 //     if (userId) {
 //       axios
 //         .get(`http://localhost:5000/api/users/${userId}`, {
-//           headers: {
-//             Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
-//           },
+//           headers: { Authorization: `Bearer ${token}` },
 //         })
 //         .then((response) => {
-//           const userData = response.data; // Store response data
-//           console.log("Fetched User Data:", userData); // Log the fetched data
-//           setUser(userData); // Set user state
-//           setSelectedImage(`http://localhost:5000/${userData.profileImage}`); // Set profile image
+//           const userData = response.data;
+//           setUser(userData);
+//           setSelectedImage(`http://localhost:5000/${userData.profileImage}`);
 
-//           // Extract first and latest credit scores
 //           if (userData.creditScore.length > 0) {
-//             setFirstScore(userData.creditScore[0]); // First score
-//             setLatestScore(
-//               userData.creditScore[userData.creditScore.length - 1]
-//             ); // Latest score
+//             setFirstScore(userData.creditScore[0]);
+//             setLatestScore(userData.creditScore[userData.creditScore.length - 1]);
 //           }
 //         })
 //         .catch((error) => console.error("Error fetching user data:", error));
 //     }
-//   }, [userId]); // Dependency array with userId
+//   }, [userId]);
 
 //   const handleImageChange = (event) => {
 //     const file = event.target.files[0];
 //     if (file) {
-//       // Create a preview of the image
 //       const imageUrl = URL.createObjectURL(file);
 //       setSelectedImage(imageUrl);
 //     }
 //   };
 
 //   const handleEditClick = () => {
-//     // Trigger the file input click when edit button is clicked
 //     document.getElementById("fileInput").click();
 //   };
 
 //   return (
 //     <>
 //       <Navbar />
-
 //       <Box
 //         sx={{
+//           minHeight: "100vh",
+//           paddingTop: "5rem",
 //           display: "flex",
 //           flexDirection: "column",
 //           alignItems: "center",
-//           justifyContent: "center",
-//           p: 3,
-//           marginTop: "109px",
-//           position: "relative",
+//           backgroundColor: "#f5f5f5", // Subtle light grey background for page
 //         }}
 //       >
-//         {/* Render the graphs with the first and latest scores */}
-//         {firstScore !== null && (
-//           <CreditScoreGraph score={firstScore} title="First Credit Score" />
-//         )}
-//         {latestScore !== null && (
-//           <CreditScoreGraph score={latestScore} title="Latest Credit Score" />
-//         )}
-
-//         {/* Profile Image */}
-//         <Box sx={{ position: "relative" }}>
+//         {/* Profile Card */}
+//         <Card
+//           sx={{
+//             maxWidth: 400,
+//             textAlign: "center",
+//             borderRadius: 3,
+//             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+//             backgroundColor: "#fff",
+//             marginBottom: 4,
+//             padding: 3,
+//           }}
+//         >
 //           <Avatar
 //             alt="Profile Image"
-//             src={selectedImage} // Display selected image
-//             sx={{ width: 242.02, height: 242.02, marginBottom: 2 }}
-//           />
-//           {/* Edit Icon */}
-//           <IconButton
-//             onClick={handleEditClick}
+//             src={selectedImage}
 //             sx={{
-//               position: "absolute",
-//               bottom: 0,
-//               right: 0,
-//               backgroundColor: "#000000", // Set background to #000000
-//               "&:hover": {
-//                 backgroundColor: "#333333", // Optional hover effect, slightly lighter
-//               },
+//               width: 150,
+//               height: 150,
+//               margin: "0 auto",
+//               border: "6px solid #6a11cb",
+//               boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.15)",
+//             }}
+//           />
+//           <Typography variant="h5" sx={{ mt: 2, fontWeight: "bold" }}>
+//             {user.fullName}
+//           </Typography>
+//           <Typography variant="body1" color="textSecondary" sx={{ mb: 2 }}>
+//             {user.email}
+//           </Typography>
+//           <Button
+//             variant="contained"
+//             sx={{
+//               backgroundColor: "#6a11cb",
+//               "&:hover": { backgroundColor: "#2575fc" },
+//               marginTop: 2,
+//               borderRadius: 3,
+//               padding: "10px 20px",
+//               boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
 //             }}
 //           >
-//             <Edit sx={{ color: "#F1F1F1" }} /> {/* Set icon color to #F1F1F1 */}
-//           </IconButton>
+//             Edit Profile
+//           </Button>
+//         </Card>
 
-//           {/* Hidden File Input */}
-//           <input
-//             type="file"
-//             id="fileInput"
-//             style={{ display: "none" }} // Hide the input
-//             accept="image/*"
-//             onChange={handleImageChange}
-//           />
-//         </Box>
-
-//         {/* Name */}
-//         <Typography
-//           className="ProfileName"
-//           variant="h5"
-//           sx={{ color: "#191919", marginBottom: 1 }}
+//         {/* Graphs and Credit Scores Card */}
+//         <Card
+//           sx={{
+//             width: "90%",
+//             maxWidth: 1000,
+//             borderRadius: 3,
+//             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+//             backgroundColor: "#ffffff",
+//             padding: 4,
+//             marginBottom: 4,
+//           }}
 //         >
-//           {user.fullName} {/* Dynamic Name from backend/localStorage */}
-//         </Typography>
+//           <Box
+//             sx={{
+//               display: "flex",
+//               gap: 5,
+//               justifyContent: "center",
+//               alignItems: "center",
+//               marginBottom: 4,
+//             }}
+//           >
+//             {firstScore !== null && (
+//               <Box sx={{ textAlign: "center" }}>
+//                 <CreditScoreGraph score={firstScore} title="First Credit Score" />
+//               </Box>
+//             )}
+//             {latestScore !== null && (
+//               <Box sx={{ textAlign: "center" }}>
+//                 <CreditScoreGraph score={latestScore} title="Latest Credit Score" />
+//               </Box>
+//             )}
+//           </Box>
 
-//         {/* Email */}
-//         <Typography
-//           className="ProfileInfo"
-//           variant="body1"
-//           sx={{ color: "#757575", marginBottom: 1 }}
-//         >
-//           {user.email} {/* Dynamic Email from backend/localStorage */}
-//         </Typography>
-
-//         {/* Credit Score */}
-//         <Typography className="ProfileInfo" variant="body1" sx={{ color: "#757575" }}>
-//           Credit Scores: {user.creditScore.join(", ")} {/* Display all scores */}
-//         </Typography>
+//           {/* Credit Scores Section */}
+//           <Typography
+//             variant="h6"
+//             gutterBottom
+//             sx={{ fontWeight: "bold", color: "#6a11cb", textAlign: "center" }}
+//           >
+//             Credit Scores
+//           </Typography>
+//           <Typography textAlign="center">
+//             {user.creditScore.length > 0 ? (
+//               <>
+//                 First: {firstScore}, Latest: {latestScore}
+//               </>
+//             ) : (
+//               "No credit scores available."
+//             )}
+//           </Typography>
+//         </Card>
 
 //         {/* Invoices Section */}
-//         <Box sx={{ width: "100%", marginTop: 3 }}>
-//           <Typography variant="h6" sx={{ marginBottom: 2 }}>
+//         <Box sx={{ width: "100%", maxWidth: 800, marginBottom: 6 }}>
+//           <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
 //             Invoices
 //           </Typography>
-
 //           {user.invoices.length > 0 ? (
-//             <List>
-//               {user.invoices.map((invoice, index) => (
-//                 <ListItem key={invoice._id}>
-//                   <ListItemText
-//                     primary={`Name: ${invoice.name}`} // Display the name of the invoice
-//                     secondary={
-//                       <>
-//                         <Typography component="span" variant="body2">
-//                           Message: {invoice.message}
-//                         </Typography>
-//                         <br />
-//                         <Typography component="span" variant="body2">
-//                           Price: ${invoice.price}
-//                         </Typography>
-//                         <br />
-//                         <Typography component="span" variant="body2">
-//                           Date: {new Date(invoice.date).toLocaleDateString()}
-//                         </Typography>
-//                         <br />
-//                         <Typography component="span" variant="body2">
-//                           Due Date: {new Date(invoice.dueDate).toLocaleDateString()}
-//                         </Typography>
-//                       </>
-//                     }
-//                   />
-//                 </ListItem>
-//               ))}
-//             </List>
+//             <TableContainer component={Paper} sx={{ borderRadius: 3, boxShadow: 2 }}>
+//               <Table>
+//               <TableHead>
+//               <TableRow>
+                
+//                   <>
+                    
+//                     <TableCell className='TableHeader' sx={{ color: '#667085' }}>Name</TableCell>
+//                     <TableCell className='TableHeader' sx={{ color: '#667085' }}>Message</TableCell>
+//                     <TableCell className='TableHeader' sx={{ color: '#667085' }}>Price</TableCell>
+//                     <TableCell className='TableHeader' sx={{ color: '#667085' }}>Date</TableCell>
+//                     <TableCell className='TableHeader' sx={{ color: '#667085' }}>Due Date</TableCell>
+//                     <TableCell className='TableHeader' sx={{ color: '#667085' }}>Payment Status</TableCell>
+//                   </>
+                
+//               </TableRow>
+//             </TableHead>
+//                 <TableBody>
+//                   {user.invoices.map((invoice) => (
+//                     <TableRow key={invoice._id}>
+//                       <TableCell>
+//                         <Typography variant="subtitle1">{invoice.name}</Typography>
+//                       </TableCell>
+//                       <TableCell>{invoice.message}</TableCell>
+//                       <TableCell>${invoice.price}</TableCell>
+//                       <TableCell>
+//                         {new Date(invoice.date).toLocaleDateString()}
+//                       </TableCell>
+//                       <TableCell>
+//                         {new Date(invoice.dueDate).toLocaleDateString()}
+//                       </TableCell>
+//                       <TableCell>
+//                         {invoice.paymentStatus}
+//                       </TableCell>
+//                     </TableRow>
+//                   ))}
+//                 </TableBody>
+//               </Table>
+//             </TableContainer>
 //           ) : (
-//             <Typography variant="body2" sx={{ color: "#757575" }}>
-//               No invoices available.
-//             </Typography>
+//             <Typography>No invoices available.</Typography>
 //           )}
 //         </Box>
+
+//         {/* Floating Action Button */}
+//         <IconButton
+//           sx={{
+//             position: "fixed",
+//             bottom: 16,
+//             right: 16,
+//             backgroundColor: "#6a11cb",
+//             "&:hover": { backgroundColor: "#2575fc" },
+//             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)",
+//           }}
+//         >
+//           <Edit sx={{ color: "#ffffff" }} />
+//         </IconButton>
 //       </Box>
+
+
+
 //     </>
 //   );
 // };
 
 // export default Profile;
-
-
-
 
 
 import React, { useState, useEffect } from "react";
@@ -210,7 +265,6 @@ import {
   Avatar,
   IconButton,
   Card,
-  CardContent,
   Button,
   Table,
   TableBody,
@@ -220,7 +274,7 @@ import {
   Paper,
   TableHead,
 } from "@mui/material";
-import { Edit } from "@mui/icons-material"; 
+import { Edit } from "@mui/icons-material";
 import Navbar from "../../components/Navbar";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -235,17 +289,19 @@ const Profile = () => {
   const [user, setUser] = useState({
     fullName: "",
     email: "",
-    creditScore: [],
     profileImage: "",
     invoices: [],
   });
-
-  const [firstScore, setFirstScore] = useState(null);
-  const [latestScore, setLatestScore] = useState(null);
+  const [creditScores, setCreditScores] = useState({
+    transunion: [],
+    experian: [],
+    equifax: [],
+  });
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (userId) {
+      // Fetch user data
       axios
         .get(`http://localhost:5000/api/users/${userId}`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -254,13 +310,19 @@ const Profile = () => {
           const userData = response.data;
           setUser(userData);
           setSelectedImage(`http://localhost:5000/${userData.profileImage}`);
-
-          if (userData.creditScore.length > 0) {
-            setFirstScore(userData.creditScore[0]);
-            setLatestScore(userData.creditScore[userData.creditScore.length - 1]);
-          }
         })
         .catch((error) => console.error("Error fetching user data:", error));
+
+      // Fetch credit scores data
+      axios
+        .get(`http://localhost:5000/api/credit-scores/${userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((response) => {
+          const creditData = response.data.data; // Access data property in response
+          setCreditScores(creditData);
+        })
+        .catch((error) => console.error("Error fetching credit scores:", error));
     }
   }, [userId]);
 
@@ -286,7 +348,7 @@ const Profile = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          backgroundColor: "#f5f5f5", // Subtle light grey background for page
+          backgroundColor: "#f5f5f5",
         }}
       >
         {/* Profile Card */}
@@ -333,7 +395,7 @@ const Profile = () => {
           </Button>
         </Card>
 
-        {/* Graphs and Credit Scores Card */}
+        {/* Credit Scores Section */}
         <Card
           sx={{
             width: "90%",
@@ -345,6 +407,13 @@ const Profile = () => {
             marginBottom: 4,
           }}
         >
+          <Typography
+            variant="h6"
+            gutterBottom
+            sx={{ fontWeight: "bold", color: "#6a11cb", textAlign: "center" }}
+          >
+            Credit Scores
+          </Typography>
           <Box
             sx={{
               display: "flex",
@@ -354,35 +423,40 @@ const Profile = () => {
               marginBottom: 4,
             }}
           >
-            {firstScore !== null && (
+            {creditScores.transunion.length > 0 && (
               <Box sx={{ textAlign: "center" }}>
-                <CreditScoreGraph score={firstScore} title="First Credit Score" />
+                <CreditScoreGraph
+                  score={creditScores.transunion[creditScores.transunion.length - 1]}
+                  title="Latest Transunion Score"
+                />
+                <Typography variant="subtitle1">
+                  First Score: {creditScores.transunion[0]}
+                </Typography>
               </Box>
             )}
-            {latestScore !== null && (
+            {creditScores.experian.length > 0 && (
               <Box sx={{ textAlign: "center" }}>
-                <CreditScoreGraph score={latestScore} title="Latest Credit Score" />
+                <CreditScoreGraph
+                  score={creditScores.experian[creditScores.experian.length - 1]}
+                  title="Latest Experian Score"
+                />
+                <Typography variant="subtitle1">
+                  First Score: {creditScores.experian[0]}
+                </Typography>
+              </Box>
+            )}
+            {creditScores.equifax.length > 0 && (
+              <Box sx={{ textAlign: "center" }}>
+                <CreditScoreGraph
+                  score={creditScores.equifax[creditScores.equifax.length - 1]}
+                  title="Latest Equifax Score"
+                />
+                <Typography variant="subtitle1">
+                  First Score: {creditScores.equifax[0]}
+                </Typography>
               </Box>
             )}
           </Box>
-
-          {/* Credit Scores Section */}
-          <Typography
-            variant="h6"
-            gutterBottom
-            sx={{ fontWeight: "bold", color: "#6a11cb", textAlign: "center" }}
-          >
-            Credit Scores
-          </Typography>
-          <Typography textAlign="center">
-            {user.creditScore.length > 0 ? (
-              <>
-                First: {firstScore}, Latest: {latestScore}
-              </>
-            ) : (
-              "No credit scores available."
-            )}
-          </Typography>
         </Card>
 
         {/* Invoices Section */}
@@ -393,38 +467,25 @@ const Profile = () => {
           {user.invoices.length > 0 ? (
             <TableContainer component={Paper} sx={{ borderRadius: 3, boxShadow: 2 }}>
               <Table>
-              <TableHead>
-              <TableRow>
-                
-                  <>
-                    
-                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Name</TableCell>
-                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Message</TableCell>
-                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Price</TableCell>
-                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Date</TableCell>
-                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Due Date</TableCell>
-                    <TableCell className='TableHeader' sx={{ color: '#667085' }}>Payment Status</TableCell>
-                  </>
-                
-              </TableRow>
-            </TableHead>
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ color: '#667085' }}>Name</TableCell>
+                    <TableCell sx={{ color: '#667085' }}>Message</TableCell>
+                    <TableCell sx={{ color: '#667085' }}>Price</TableCell>
+                    <TableCell sx={{ color: '#667085' }}>Date</TableCell>
+                    <TableCell sx={{ color: '#667085' }}>Due Date</TableCell>
+                    <TableCell sx={{ color: '#667085' }}>Payment Status</TableCell>
+                  </TableRow>
+                </TableHead>
                 <TableBody>
                   {user.invoices.map((invoice) => (
                     <TableRow key={invoice._id}>
-                      <TableCell>
-                        <Typography variant="subtitle1">{invoice.name}</Typography>
-                      </TableCell>
+                      <TableCell>{invoice.name}</TableCell>
                       <TableCell>{invoice.message}</TableCell>
                       <TableCell>${invoice.price}</TableCell>
-                      <TableCell>
-                        {new Date(invoice.date).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell>
-                        {new Date(invoice.dueDate).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell>
-                        {invoice.paymentStatus}
-                      </TableCell>
+                      <TableCell>{new Date(invoice.date).toLocaleDateString()}</TableCell>
+                      <TableCell>{new Date(invoice.dueDate).toLocaleDateString()}</TableCell>
+                      <TableCell>{invoice.paymentStatus}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -435,7 +496,6 @@ const Profile = () => {
           )}
         </Box>
 
-        {/* Floating Action Button */}
         <IconButton
           sx={{
             position: "fixed",
@@ -449,21 +509,8 @@ const Profile = () => {
           <Edit sx={{ color: "#ffffff" }} />
         </IconButton>
       </Box>
-
-
-
     </>
   );
 };
 
 export default Profile;
-
-
-
-
-
-
-
-
-
-

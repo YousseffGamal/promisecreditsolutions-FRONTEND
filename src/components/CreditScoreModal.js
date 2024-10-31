@@ -1,5 +1,5 @@
-// import React, { useState } from 'react'; // Ensure useState is imported
-// import { Modal, Box, Typography, TextField, Button } from '@mui/material'; // Import other necessary components
+// import React, { useState } from 'react'; 
+// import { Modal, Box, Typography, TextField, Button } from '@mui/material'; 
 
 // const CreditScoreModal = ({ open, onClose, onSubmit, userId }) => {
 //   const [creditScore, setCreditScore] = useState('');
@@ -30,11 +30,11 @@
 
 //       // Send a PUT request to update the user's credit score
 //       const response = await fetch(`http://localhost:5000/api/users/${userId}/credit-score`, {
-//         method: 'POST',
+//         method: 'PUT',
 //         headers: {
 //           'Content-Type': 'application/json',
 //         },
-//         body: JSON.stringify({ creditScore: parsedScore }),
+//         body: JSON.stringify({ score: parsedScore }),
 //       });
 
 //       if (!response.ok) {
@@ -43,7 +43,7 @@
 
 //       const data = await response.json();
 
-//       // Pass the updated credit score back to the parent (optional)
+//       // Optional: Pass the updated credit score array back to the parent component
 //       onSubmit(data.user.creditScore);
 
 //       // Reset input and close modal
@@ -79,7 +79,7 @@
 //           value={creditScore}
 //           onChange={(e) => setCreditScore(e.target.value)}
 //           type="number"
-//           inputProps={{ min: 0, max: 850 }} // Restrict input to valid credit score range
+//           inputProps={{ min: 0, max: 850 }} 
 //         />
 //         <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
 //           <Button onClick={onClose} variant="outlined" sx={{ mr: 2 }}>
@@ -95,13 +95,23 @@
 // };
 
 // export default CreditScoreModal;
-import React, { useState } from 'react'; 
-import { Modal, Box, Typography, TextField, Button } from '@mui/material'; 
+
+
+
+import React, { useState } from 'react';
+import { Modal, Box, Typography, TextField, Button } from '@mui/material';
 
 const CreditScoreModal = ({ open, onClose, onSubmit, userId }) => {
-  const [creditScore, setCreditScore] = useState('');
+  const [transunion, setTransunion] = useState('');
+  const [experian, setExperian] = useState('');
+  const [equifax, setEquifax] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const validateScore = (score) => {
+    const parsedScore = parseInt(score);
+    return !isNaN(parsedScore) && parsedScore >= 0 && parsedScore <= 850;
+  };
 
   const handleSubmit = async () => {
     if (!userId) {
@@ -109,15 +119,8 @@ const CreditScoreModal = ({ open, onClose, onSubmit, userId }) => {
       return;
     }
 
-    if (creditScore === '') {
-      setError('Credit Score is required');
-      return;
-    }
-
-    const parsedScore = parseInt(creditScore);
-
-    if (isNaN(parsedScore) || parsedScore < 0 || parsedScore > 850) {
-      setError('Please enter a valid credit score between 0 and 850');
+    if (!validateScore(transunion) || !validateScore(experian) || !validateScore(equifax)) {
+      setError('Please enter valid credit scores between 0 and 850 for all fields');
       return;
     }
 
@@ -125,26 +128,34 @@ const CreditScoreModal = ({ open, onClose, onSubmit, userId }) => {
       setLoading(true);
       setError('');
 
-      // Send a PUT request to update the user's credit score
-      const response = await fetch(`http://localhost:5000/api/users/${userId}/credit-score`, {
+      const body = {
+        transunion: parseInt(transunion),
+        experian: parseInt(experian),
+        equifax: parseInt(equifax),
+      };
+
+      // Send a PUT request to update the user's credit scores
+      const response = await fetch(`http://localhost:5000/api/credit-scores/update/${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ score: parsedScore }),
+        body: JSON.stringify(body),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update credit score');
+        throw new Error('Failed to update credit scores');
       }
 
       const data = await response.json();
 
-      // Optional: Pass the updated credit score array back to the parent component
-      onSubmit(data.user.creditScore);
+      // Optional: Pass the updated credit scores array back to the parent component
+      onSubmit(data);
 
-      // Reset input and close modal
-      setCreditScore('');
+      // Reset inputs and close modal
+      setTransunion('');
+      setExperian('');
+      setEquifax('');
       onClose();
     } catch (err) {
       setError(err.message);
@@ -166,18 +177,40 @@ const CreditScoreModal = ({ open, onClose, onSubmit, userId }) => {
         }}
       >
         <Typography variant="h6" mb={2}>
-          Enter Credit Score
+          Enter Credit Scores
         </Typography>
         {error && <Typography color="error" mb={2}>{error}</Typography>}
+
         <TextField
-          label="Credit Score"
+          label="Transunion Score"
           variant="outlined"
           fullWidth
-          value={creditScore}
-          onChange={(e) => setCreditScore(e.target.value)}
+          value={transunion}
+          onChange={(e) => setTransunion(e.target.value)}
           type="number"
-          inputProps={{ min: 0, max: 850 }} 
+          inputProps={{ min: 0, max: 850 }}
+          sx={{ mb: 2 }}
         />
+        <TextField
+          label="Experian Score"
+          variant="outlined"
+          fullWidth
+          value={experian}
+          onChange={(e) => setExperian(e.target.value)}
+          type="number"
+          inputProps={{ min: 0, max: 850 }}
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          label="Equifax Score"
+          variant="outlined"
+          fullWidth
+          value={equifax}
+          onChange={(e) => setEquifax(e.target.value)}
+          type="number"
+          inputProps={{ min: 0, max: 850 }}
+        />
+
         <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
           <Button onClick={onClose} variant="outlined" sx={{ mr: 2 }}>
             Cancel
