@@ -104,7 +104,7 @@ const Layout = ({ children }) => {
           <ListItemIcon>
             <Dashboard style={{ color: '#656565' }} />
           </ListItemIcon>
-          <ListItemText className='NavText' primary="Leads Dashboard" sx={{ color: '#656565' }} />
+          <ListItemText className='NavText' primary="Admin Dashboard" sx={{ color: '#656565' }} />
         </ListItem>
 
         <ListItem button onClick={() => router.push('/ReviewsPage')}>
@@ -148,7 +148,7 @@ const Layout = ({ children }) => {
               fontSize: { xs: '13px', sm: '15px', md: '2.5rem' },
             }}
           >
-            Leads Dashboard
+           Admin Dashboard
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Box
