@@ -89,7 +89,7 @@ const Layout = ({ children }) => {
           className="About"
           sx={{ color: '#000000', marginTop: '5px', textAlign: 'left', padding: '8px 16px' }}
         >
-          Manage leads and track progress
+          Manage  and track progress
         </Typography>
       </Box>
       <List>

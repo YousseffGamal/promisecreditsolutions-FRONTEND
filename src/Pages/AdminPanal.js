@@ -91,8 +91,9 @@ const AdminPanel = () => {
     switch (paymentStatus) {
       case 'pending':
         return { color: '#0466D4', backgroundColor: '#f0f7ff', borderRadius: '25.74px', padding: '4px 8px' };
-      case 'paid':
-        return { color: '#CB0A1D', backgroundColor: '#ffebed', borderRadius: '25.74px', padding: '4px 8px' };
+        case 'paid':
+          return { color: '#0A4B1D', backgroundColor: '#e0ffed', borderRadius: '25.74px', padding: '4px 8px' };
+      
       case 'cancelled':
         return { color: '#D0A704', backgroundColor: '#fffae6', borderRadius: '25.74px', padding: '4px 8px' };
       default:
