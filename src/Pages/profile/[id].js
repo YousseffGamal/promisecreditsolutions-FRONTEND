@@ -172,9 +172,12 @@ const Profile = () => {
           score={creditScores.transunion[creditScores.transunion.length - 1]}
         />
       </Box>
-      <Typography variant="subtitle1">
-        First Score: {creditScores.transunion[0]}
-      </Typography>
+      <Typography variant="subtitle1" sx={{ textAlign: "center" }}>
+      Previous Score: {creditScores.transunion[creditScores.transunion.length - 2]}
+    </Typography>
+    <Typography variant="body1" sx={{ textAlign: "center", color: creditScores.transunion.length > 1 ? (creditScores.transunion[creditScores.transunion.length - 1] > creditScores.transunion[creditScores.transunion.length - 2] ? 'green' : 'red') : 'inherit' }}>
+                Difference: {creditScores.transunion.length > 1 ? (creditScores.transunion[creditScores.transunion.length - 1] - creditScores.transunion[creditScores.transunion.length - 2]) : 'N/A'}
+              </Typography>
     </Card>
   )}
   {creditScores.experian.length > 0 && (
@@ -201,9 +204,12 @@ const Profile = () => {
           score={creditScores.experian[creditScores.experian.length - 1]}
         />
       </Box>
-      <Typography variant="subtitle1">
-        First Score: {creditScores.experian[0]}
-      </Typography>
+      <Typography variant="subtitle1" sx={{ textAlign: "center" }}>
+      Previous Score: {creditScores.experian[creditScores.experian.length - 2]}
+    </Typography>
+    <Typography variant="body1" sx={{ textAlign: "center", color: creditScores.experian.length > 1 ? (creditScores.experian[creditScores.experian.length - 1] > creditScores.experian[creditScores.experian.length - 2] ? 'green' : 'red') : 'inherit' }}>
+                Difference: {creditScores.experian.length > 1 ? (creditScores.experian[creditScores.experian.length - 1] - creditScores.experian[creditScores.experian.length - 2]) : 'N/A'}
+              </Typography>
     </Card>
   )}
   {creditScores.equifax.length > 0 && (
@@ -230,9 +236,12 @@ const Profile = () => {
           score={creditScores.equifax[creditScores.equifax.length - 1]}
         />
       </Box>
-      <Typography variant="subtitle1">
-        First Score: {creditScores.equifax[0]}
-      </Typography>
+      <Typography variant="subtitle1" sx={{ textAlign: "center" }}>
+      Previous Score: {creditScores.equifax[creditScores.equifax.length - 2]}
+    </Typography>
+    <Typography variant="body1" sx={{ textAlign: "center", color: creditScores.equifax.length > 1 ? (creditScores.equifax[creditScores.equifax.length - 1] > creditScores.equifax[creditScores.equifax.length - 2] ? 'green' : 'red') : 'inherit' }}>
+                Difference: {creditScores.equifax.length > 1 ? (creditScores.equifax[creditScores.equifax.length - 1] - creditScores.equifax[creditScores.equifax.length - 2]) : 'N/A'}
+              </Typography>
     </Card>
   )}
 </Box>
