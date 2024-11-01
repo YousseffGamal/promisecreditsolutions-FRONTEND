@@ -214,6 +214,9 @@ const AdminPanel = () => {
     setCreditScores((prevScores) => ({ ...prevScores, [currentUserId]: score })); // Update score for the specific user
     setShowCreditScoreModal(false);
   };
+
+
+  
   const handleDeleteInvoice = async () => {
     const token = localStorage.getItem("token");
 
@@ -362,40 +365,6 @@ const AdminPanel = () => {
                         <TableCell>{row.fullName}</TableCell>
                         <TableCell>{row.email}</TableCell>
                         <TableCell>{row.role}</TableCell>
-                        {/* <TableCell>
-                        <Button
-        onClick={handleSendInvoice}
-        className="editButton"
-        sx={{
-          color: 'white',
-          backgroundColor: '#0177FB',
-          padding: '8px 16px',
-          borderRadius: '25px',
-          '&:hover': { backgroundColor: '#0166D4' },
-        }}
-      >
-        Send
-      </Button>
-    
-</TableCell> */}
-                        {/* <TableCell>
-
-                          <SendInvoiceModal
-                            open={modalOpen}
-                            onClose={handleCloseModal}
-                            userId={row._id} // Pass the userId to the modal
-                          />
-                          <Button
-                            onClick={() => handleOpenCreditScoreModal(row._id)} // Pass userId to open modal
-                            variant="contained"
-                            sx={{ backgroundColor: '#0177FB', color: '#fff' }}
-                          >
-                            Enter Credit Score
-                          </Button>
-                       
-
-
-                        </TableCell> */}
                         <CreditScoreModal
                             open={showCreditScoreModal}
                             onClose={() => setShowCreditScoreModal(false)}

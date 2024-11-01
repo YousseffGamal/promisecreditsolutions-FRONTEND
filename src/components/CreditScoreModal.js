@@ -143,14 +143,16 @@ const CreditScoreModal = ({ open, onClose, onSubmit, userId }) => {
         body: JSON.stringify(body),
       });
 
+      console.log('body:', body);
       if (!response.ok) {
         throw new Error('Failed to update credit scores');
       }
 
       const data = await response.json();
+      console.log('data.data:', data.data);
 
       // Optional: Pass the updated credit scores array back to the parent component
-      onSubmit(data);
+      onSubmit(data.data);
 
       // Reset inputs and close modal
       setTransunion('');
