@@ -213,6 +213,7 @@ const AdminPanel = () => {
   const handleCreditScoreSubmit = (score) => {
     setCreditScores((prevScores) => ({ ...prevScores, [currentUserId]: score })); // Update score for the specific user
     setShowCreditScoreModal(false);
+    console.log("score:", score);
   };
 
 
@@ -371,9 +372,7 @@ const AdminPanel = () => {
                             onSubmit={handleCreditScoreSubmit}
                             userId={currentUserId}
                           />
-                          {creditScores[row._id] && ( // Check if score exists for the user
-                            <CreditScoreGraph score={creditScores[row._id]} /> // Pass the score to your graph
-                          )}
+                          
 
                         <TableCell>
                           <MoreVertIcon onClick={(event) => handleClick(event, row._id)} />

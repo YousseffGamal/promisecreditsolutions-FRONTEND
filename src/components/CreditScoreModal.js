@@ -135,8 +135,8 @@ const CreditScoreModal = ({ open, onClose, onSubmit, userId }) => {
       };
 
       // Send a PUT request to update the user's credit scores
-      const response = await fetch(`http://localhost:5000/api/credit-scores/update/${userId}`, {
-        method: 'PUT',
+      const response = await fetch(`http://localhost:5000/api/credit-scores/append/${userId}`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
