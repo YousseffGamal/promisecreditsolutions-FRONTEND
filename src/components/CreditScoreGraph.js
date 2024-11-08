@@ -90,6 +90,8 @@
 // };
 
 // export default CreditScoreGraph;import React from 'react';
+
+
 const CreditScoreGraph = ({ score }) => {
   const getColorForScore = (score) => {
     if (score < 560) return '#FF6F61'; // Very Bad
